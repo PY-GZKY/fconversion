@@ -1,2 +1,2 @@
 from .version import __version__  # noqa F401
-from .mongo2csv import MongoToCsv
+from .mongo_core import MongoToCsv
