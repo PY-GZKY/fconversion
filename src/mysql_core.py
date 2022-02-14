@@ -1,9 +1,13 @@
+import warnings
+from asyncio import as_completed
+from concurrent.futures import ThreadPoolExecutor, ALL_COMPLETED, wait
 from typing import Optional
 
 import pandas
 import pymysql
 
 from src.constants import *
+from src.utils import to_str_datetime, serialize_obj
 
 
 class MysqlEngine:
@@ -38,33 +42,119 @@ class MysqlEngine:
             db=self.database,
             charset='utf8'
         )
-        self.cursor = self.mysql_core_.cursor(pymysql.cursors.DictCursor)  # 游标对象
+        self.cursor = self.mysql_core_.cursor(pymysql.cursors.DictCursor)
+        self.collection_s_ = []
+        self.collection_names = self.get_collection_names(self.cursor)
+        print(self.collection_names )
+
+    def get_collection_names(self, cursor):
+        cursor.execute('show tables')
+        for core_ in cursor.fetchall():
+            for k, v in core_.items():
+                self.collection_s_.append(v)
+        return self.collection_s_
+
 
     def to_csv(self, query: dict, filename: str, limit: int = 20):
         if not isinstance(query, dict):
             raise TypeError('query must be of Dict type.')
-
-        sql = f"select * from {self.collection};"
-        self.cursor.execute(sql)
-        doc_list_ = self.cursor.fetchall()
-        data = pandas.DataFrame(doc_list_)
-        data.to_csv(path_or_buf=f'{filename}.csv')
+        if self.collection:
+            if filename is None:
+                filename = f'{self.collection}_{to_str_datetime()}'
+            sql = f"select * from {self.collection};"
+            self.cursor.execute(sql)
+            doc_list_ = self.cursor.fetchall()
+            print(doc_list_)
+            data = pandas.DataFrame(doc_list_)
+            data.to_csv(path_or_buf=f'{filename}.csv')
+        else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
+            self.to_csv_s_()
 
     def to_excel(self, query: dict, filename: str, limit: int = 20):
         if not isinstance(query, dict):
             raise TypeError('query must be of Dict type.')
+        if self.collection:
+            if filename is None:
+                filename = f'{self.collection}_{to_str_datetime()}'
+            sql = f"select * from {self.collection};"
+            self.cursor.execute(sql)
+            doc_list_ = self.cursor.fetchall()
+            data = pandas.DataFrame(doc_list_)
+            data.to_excel(path_or_buf=f'{filename}.csv')
+        else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
+            self.to_excel_s_()
 
-        sql = f"select * from {self.collection};"
-        self.cursor.execute(sql)
-        doc_list_ = self.cursor.fetchall()
-        data = pandas.DataFrame(doc_list_)
-        data.to_excel(path_or_buf=f'{filename}.csv')
-
-    def to_json(self):
-        ...
+    def to_json(self, query: dict, filename: str = None, limit: int = 20):
+        if not isinstance(query, dict):
+            raise TypeError('query must be of Dict type.')
+        if self.collection:
+            if filename is None:
+                filename = f'{self.collection}_{to_str_datetime()}'
+            sql = f"select * from {self.collection};"
+            self.cursor.execute(sql)
+            doc_list_ = self.cursor.fetchall()
+            with open(f'{filename}.json', 'w', encoding="utf-8") as f:
+                [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+        else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
+            self.to_json_s_()
 
     def to_mongo(self):
         ...
+
+    def no_collection_to_csv_(self, collection_: str, filename: str):
+        if collection_:
+            if filename is None:
+                filename = f'{collection_}_{to_str_datetime()}'
+            sql = f"select * from {collection_};"
+            self.cursor.execute(sql)
+            doc_list_ = self.cursor.fetchall()
+            print(doc_list_)
+            data = pandas.DataFrame(doc_list_)
+            data.to_csv(path_or_buf=f'{filename}.csv',  encoding=PANDAS_ENCODING)
+
+    def no_collection_to_excel_(self, collection_: str, filename: str):
+        if collection_:
+            if filename is None:
+                filename = f'{collection_}_{to_str_datetime()}'
+            sql = f"select * from {collection_};"
+            self.cursor.execute(sql)
+            doc_list_ = self.cursor.fetchall()
+            data = pandas.DataFrame(doc_list_)
+            data.to_excel(excel_writer=f'{filename}.xlsx', encoding=PANDAS_ENCODING)
+
+    def no_collection_to_json_(self, collection_: str, filename: str):
+        if collection_:
+            if filename is None:
+                filename = f'{collection_}_{to_str_datetime()}'
+            sql = f"select * from {collection_};"
+            self.cursor.execute(sql)
+            doc_list_ = self.cursor.fetchall()
+            with open(f'{filename}.json', 'w', encoding="utf-8") as f:
+                [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+
+    def to_csv_s_(self):
+        self.concurrent_(self.no_collection_to_csv_, self.collection_names)
+
+    def to_excel_s_(self):
+        self.concurrent_(self.no_collection_to_excel_, self.collection_names)
+
+    def to_json_s_(self):
+        self.concurrent_(self.no_collection_to_json_, self.collection_names)
+
+    def concurrent_(self, func, collection_names):
+        # todo 这里并发时需要加线程锁
+        with ThreadPoolExecutor(max_workers=THREAD_POOL_MAX_WORKERS) as executor:
+            futures_ = [executor.submit(func, collection_name, collection_name) for
+                        collection_name in
+                        collection_names]
+            wait(futures_, return_when=ALL_COMPLETED)
+            for future_ in as_completed(futures_):
+                if future_.done():
+                    # print(future_.result())
+                    ...
 
     def __del__(self):
         self.cursor.close()
@@ -72,12 +162,12 @@ class MysqlEngine:
 
 
 if __name__ == '__main__':
-    M = MysqlEngine(host="192.168.0.141",
+    M = MysqlEngine(host="",
                     port=3306,
-                    username="root",
+                    username="",
                     password="",
-                    database="sm_admin",
-                    collection="hosts"
+                    database="",
+                    # collection="o"
                     )
-    M.to_csv(query={}, filename="hosts", limit=5000)
+    M.to_csv(query={}, filename="_")
     # M.to_json()

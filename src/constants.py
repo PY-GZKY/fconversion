@@ -23,3 +23,5 @@ MYSQL_ = None
 
 PANDAS_ENCODING = 'utf_8_sig'
 TIME_ZONE = 'Asia/Shanghai'
+
+THREAD_POOL_MAX_WORKERS = 5

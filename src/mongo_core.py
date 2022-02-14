@@ -2,7 +2,7 @@
 import json
 from concurrent.futures import ThreadPoolExecutor, wait, as_completed, ALL_COMPLETED
 from typing import Optional
-
+import warnings
 from pandas import DataFrame
 from pymongo import MongoClient
 
@@ -58,8 +58,8 @@ class MongoEngine:
             data = DataFrame(doc_list_)
             data.to_csv(path_or_buf=f'{filename}.csv', encoding=PANDAS_ENCODING)
         else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_csv_s_()
-            # raise TypeError('to export a single csv file, you must specify a collection name.')
 
     def to_excel(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
         if not isinstance(query, dict):
@@ -71,6 +71,7 @@ class MongoEngine:
             data = DataFrame(doc_list_)
             data.to_excel(excel_writer=f'{filename}.xlsx', sheet_name=filename, encoding=PANDAS_ENCODING)
         else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_excel_s_()
 
     def to_json(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
@@ -83,6 +84,7 @@ class MongoEngine:
             with open(f'{filename}.json', 'w', encoding="utf-8") as f:
                 [f.write(serialize_obj(data) + "\n") for data in doc_list_]
         else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_json_s_()
 
     def to_mysql(self):
@@ -117,7 +119,7 @@ class MongoEngine:
         self.concurrent_(self.no_collection_to_json_, self.collection_names)
 
     def concurrent_(self, func, collection_names):
-        with ThreadPoolExecutor(max_workers=5) as executor:
+        with ThreadPoolExecutor(max_workers=THREAD_POOL_MAX_WORKERS) as executor:
             futures_ = [executor.submit(func, collection_name, collection_name) for
                         collection_name in
                         collection_names]
@@ -130,13 +132,13 @@ class MongoEngine:
 
 if __name__ == '__main__':
     M = MongoEngine(
-        host="47.243.77.139",
+        host="",
         port=27017,
         username="",
         password="",
-        database="fastapi_vue_admin",
+        database="",
         # collection="xhs_chengdu"
     )
-    # M.to_csv(query={}, filename="小红书")
+    M.to_csv(query={}, filename="小红书")
     # M.to_excel(query={})
-    M.to_json(query={})
+    # M.to_json(query={})
