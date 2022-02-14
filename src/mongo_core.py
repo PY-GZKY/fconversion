@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+import json
 from concurrent.futures import ThreadPoolExecutor, wait, as_completed, ALL_COMPLETED
 from typing import Optional
 
@@ -66,9 +68,26 @@ class MongoEngine:
                 filename = f'{self.collection}_{to_str_datetime()}'
             doc_list_ = list(self.collection_.find(query).limit(limit))
             data = DataFrame(doc_list_)
-            data.to_excel(excel_writer=f'{filename}.xlsx', sheet_name=filename)
+            data.to_excel(excel_writer=f'{filename}.xlsx', sheet_name=filename, encoding=PANDAS_ENCODING)
         else:
             raise TypeError('to export a single excel file, you must specify a collection name.')
+
+    def to_json(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
+        if not isinstance(query, dict):
+            raise TypeError('query must be of Dict type.')
+        if self.collection_:
+            if filename is None:
+                filename = f'{self.collection}_{to_str_datetime()}'
+            doc_list_ = list(self.collection_.find(query).limit(limit))
+            print(doc_list_)
+            with open(f'{filename}.json', 'w', encoding="utf-8") as f:
+                for data in doc_list_:
+                    f.write(json.dumps(data))
+        else:
+            raise TypeError('to export a single json file, you must specify a collection name.')
+
+    def to_mysql(self):
+        ...
 
     def no_collection_to_csv_(self, collection_: str, filename: str, _id: bool = False):
         if collection_:
@@ -83,11 +102,11 @@ class MongoEngine:
             data.to_excel(excel_writer=f'{filename}.csv', encoding=PANDAS_ENCODING)
 
     def to_csvs(self):
-        # todo 如果不指定 collection 则导出此库中所有文档
+        # todo 如果不指定 collection 则导出此库中所有集合
         self.concurrent_(self.no_collection_to_csv_, self.collection_names)
 
     def to_excels(self):
-        # todo 如果不指定 collection 则导出此库中所有文档
+        # todo 如果不指定 collection 则导出此库中所有集合
         self.concurrent_(self.no_collection_to_excel_, self.collection_names)
 
     def concurrent_(self, func, collection_names):
@@ -101,11 +120,7 @@ class MongoEngine:
                     # print(future_.result())
                     ...
 
-    def to_json(self):
-        ...
 
-    def to_mysql(self):
-        ...
 
 
 if __name__ == '__main__':
@@ -119,5 +134,5 @@ if __name__ == '__main__':
     )
     # M.to_csvs()
     # M.to_csv(query={}, filename="小红书")
-    M.to_excel(query={})
-    # M.to_json()
+    # M.to_excel(query={})
+    M.to_json(query={})
