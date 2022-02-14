@@ -75,7 +75,7 @@ if __name__ == '__main__':
     M = MysqlEngine(host="192.168.0.141",
                     port=3306,
                     username="root",
-                    password="...",
+                    password="",
                     database="sm_admin",
                     collection="hosts"
                     )
