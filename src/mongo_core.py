@@ -7,7 +7,7 @@ from pandas import DataFrame
 from pymongo import MongoClient
 
 from src.constants import *
-from src.utils import to_str_datetime
+from src.utils import to_str_datetime, serialize_obj
 
 
 class MongoEngine:
@@ -58,7 +58,8 @@ class MongoEngine:
             data = DataFrame(doc_list_)
             data.to_csv(path_or_buf=f'{filename}.csv', encoding=PANDAS_ENCODING)
         else:
-            raise TypeError('to export a single csv file, you must specify a collection name.')
+            self.to_csv_s_()
+            # raise TypeError('to export a single csv file, you must specify a collection name.')
 
     def to_excel(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
         if not isinstance(query, dict):
@@ -70,7 +71,7 @@ class MongoEngine:
             data = DataFrame(doc_list_)
             data.to_excel(excel_writer=f'{filename}.xlsx', sheet_name=filename, encoding=PANDAS_ENCODING)
         else:
-            raise TypeError('to export a single excel file, you must specify a collection name.')
+            self.to_excel_s_()
 
     def to_json(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
         if not isinstance(query, dict):
@@ -79,12 +80,10 @@ class MongoEngine:
             if filename is None:
                 filename = f'{self.collection}_{to_str_datetime()}'
             doc_list_ = list(self.collection_.find(query).limit(limit))
-            print(doc_list_)
             with open(f'{filename}.json', 'w', encoding="utf-8") as f:
-                for data in doc_list_:
-                    f.write(json.dumps(data))
+                [f.write(serialize_obj(data) + "\n") for data in doc_list_]
         else:
-            raise TypeError('to export a single json file, you must specify a collection name.')
+            self.to_json_s_()
 
     def to_mysql(self):
         ...
@@ -99,15 +98,23 @@ class MongoEngine:
         if collection_:
             doc_list_ = list(self.db_[collection_].find({}))
             data = DataFrame(doc_list_)
-            data.to_excel(excel_writer=f'{filename}.csv', encoding=PANDAS_ENCODING)
+            data.to_excel(excel_writer=f'{filename}.xlsx', encoding=PANDAS_ENCODING)
 
-    def to_csvs(self):
+    def no_collection_to_json_(self, collection_: str, filename: str, _id: bool = False):
+        if collection_:
+            doc_list_ = list(self.db_[collection_].find({}))
+            with open(f'{filename}.json', 'w', encoding="utf-8") as f:
+                [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+
+    def to_csv_s_(self):
         # todo 如果不指定 collection 则导出此库中所有集合
         self.concurrent_(self.no_collection_to_csv_, self.collection_names)
 
-    def to_excels(self):
-        # todo 如果不指定 collection 则导出此库中所有集合
+    def to_excel_s_(self):
         self.concurrent_(self.no_collection_to_excel_, self.collection_names)
+
+    def to_json_s_(self):
+        self.concurrent_(self.no_collection_to_json_, self.collection_names)
 
     def concurrent_(self, func, collection_names):
         with ThreadPoolExecutor(max_workers=5) as executor:
@@ -121,18 +128,15 @@ class MongoEngine:
                     ...
 
 
-
-
 if __name__ == '__main__':
     M = MongoEngine(
-        host="192.168.0.141",
+        host="47.243.77.139",
         port=27017,
-        username="admin",
+        username="",
         password="",
-        database="sm_admin_test",
-        collection="xhs_chengdu"
+        database="fastapi_vue_admin",
+        # collection="xhs_chengdu"
     )
-    # M.to_csvs()
     # M.to_csv(query={}, filename="小红书")
     # M.to_excel(query={})
     M.to_json(query={})
