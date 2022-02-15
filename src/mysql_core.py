@@ -6,11 +6,13 @@ from typing import Optional
 
 import pandas
 import pymysql
+from colorama import init as colorama_init_, Fore
 from dotenv import load_dotenv
 
 from src.constants import *
 from src.utils import to_str_datetime, serialize_obj
 
+colorama_init_(autoreset=True)
 load_dotenv(verbose=True)
 lock_ = threading.Lock()
 
@@ -59,7 +61,7 @@ class MysqlEngine:
                 self.collection_s_.append(v)
         return self.collection_s_
 
-    def to_csv(self, query: dict, filename: str, limit: int = 20):
+    def to_csv(self, query: dict, filename: str=None, limit: int = 20):
         if not isinstance(query, dict):
             raise TypeError('query must be of Dict type.')
         if self.collection:
@@ -68,9 +70,9 @@ class MysqlEngine:
             sql = f"select * from {self.collection};"
             self.cursor.execute(sql)
             doc_list_ = self.cursor.fetchall()
-            print(doc_list_)
             data = pandas.DataFrame(doc_list_)
             data.to_csv(path_or_buf=f'{filename}.csv')
+            print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_csv_s_()
@@ -85,7 +87,8 @@ class MysqlEngine:
             self.cursor.execute(sql)
             doc_list_ = self.cursor.fetchall()
             data = pandas.DataFrame(doc_list_)
-            data.to_excel(path_or_buf=f'{filename}.csv')
+            data.to_excel(path_or_buf=f'{filename}.xlsx')
+            return f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done'
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_excel_s_()
@@ -101,6 +104,7 @@ class MysqlEngine:
             doc_list_ = self.cursor.fetchall()
             with open(f'{filename}.json', 'w', encoding="utf-8") as f:
                 [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+            return f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done'
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_json_s_()
@@ -120,28 +124,34 @@ class MysqlEngine:
             lock_.release()  # release lock
             data = pandas.DataFrame(doc_list_)
             data.to_csv(path_or_buf=f'{filename}.csv', encoding=PANDAS_ENCODING)
+            return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def no_collection_to_excel_(self, collection_: str, filename: str):
         if collection_:
             if filename is None:
                 filename = f'{collection_}_{to_str_datetime()}'
 
-            cursor = self.mysql_core_.cursor(pymysql.cursors.DictCursor)
+            lock_.acquire()
             sql = f"select * from {collection_};"
-            cursor.execute(sql)
-            doc_list_ = cursor.fetchall()
+            self.cursor.execute(sql)
+            doc_list_ = self.cursor.fetchall()
+            lock_.release()
             data = pandas.DataFrame(doc_list_)
             data.to_excel(excel_writer=f'{filename}.xlsx', encoding=PANDAS_ENCODING)
+            return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def no_collection_to_json_(self, collection_: str, filename: str):
         if collection_:
             if filename is None:
                 filename = f'{collection_}_{to_str_datetime()}'
+            lock_.acquire()
             sql = f"select * from {collection_};"
             self.cursor.execute(sql)
             doc_list_ = self.cursor.fetchall()
+            lock_.release()
             with open(f'{filename}.json', 'w', encoding="utf-8") as f:
                 [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+            return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def to_csv_s_(self):
         self.concurrent_(self.no_collection_to_csv_, self.collection_names)
@@ -160,11 +170,11 @@ class MysqlEngine:
                         collection_names]
             wait(futures_, return_when=ALL_COMPLETED)
             for future_ in futures_:
-                print(future_)
+                print(future_.result())
                 ...
 
     def __del__(self):
-        # self.cursor.close()
+        self.cursor.close()
         self.mysql_core_.close()
         ...
 
@@ -176,7 +186,7 @@ if __name__ == '__main__':
         username=os.getenv('MYSQL_USERNAME'),
         password=os.getenv('MYSQL_PASSWORD'),
         database=os.getenv('MYSQL_DATABASE'),
-        # collection=os.getenv('MYSQL_COLLECTION'),
+        collection=os.getenv('MYSQL_COLLECTION'),
     )
-    M.to_csv(query={}, filename="_")
+    M.to_csv(query={})
     # M.to_json()
