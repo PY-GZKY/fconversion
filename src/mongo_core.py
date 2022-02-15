@@ -140,6 +140,31 @@ class MongoEngine:
                     print(future_.result())
                     ...
 
+    def insert_(self, item):
+        if item:
+            self.collection_.insert_one(item)
+
+
+    def many_insert_(self, items):
+        if items:
+            self.collection_.insert_many(items)
+
+
+    def update_(self, key, item):
+        if item:
+            if self.collection_.update_one({key: item[key]}, {'$set': item}, True):
+                ...
+            else:
+                ...
+
+    def many_update_(self, key, item):
+        if item:
+            if self.collection_.update_many({key: item[key]}, {'$set': item}, True):
+                ...
+            else:
+                ...
+
+
 
 if __name__ == '__main__':
     M = MongoEngine(
@@ -150,6 +175,6 @@ if __name__ == '__main__':
         database=os.getenv('MONGO_DATABASE'),
         collection=os.getenv('MONGO_COLLECTION')
     )
-    M.to_csv(query={}, _id=False, filename="公司基本信息")
+    M.to_csv(query={}, _id=False, filename="_")
     # M.to_excel(query={})
     # M.to_json(query={})
