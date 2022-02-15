@@ -36,7 +36,7 @@ setup(
     author='PY-GZKY',
     author_email='341796767@qq.com',
     url='https://github.com/PY-GZKY/fconversion',
-    license='MIT',
+    license='Apache',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=True,
