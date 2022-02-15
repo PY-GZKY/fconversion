@@ -42,7 +42,7 @@ setup(
     zip_safe=True,
     entry_points="""
         [console_scripts]
-        aiorq=aiorq.cli:cli
+        fc=src.cli:cli
     """,
     install_requires=[
         'aioredis>=1.1.0,<2.0.0',
