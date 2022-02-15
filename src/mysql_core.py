@@ -1,13 +1,18 @@
+import os
+import threading
 import warnings
-from asyncio import as_completed
 from concurrent.futures import ThreadPoolExecutor, ALL_COMPLETED, wait
 from typing import Optional
 
 import pandas
 import pymysql
+from dotenv import load_dotenv
 
 from src.constants import *
 from src.utils import to_str_datetime, serialize_obj
+
+load_dotenv(verbose=True)
+lock_ = threading.Lock()
 
 
 class MysqlEngine:
@@ -45,7 +50,7 @@ class MysqlEngine:
         self.cursor = self.mysql_core_.cursor(pymysql.cursors.DictCursor)
         self.collection_s_ = []
         self.collection_names = self.get_collection_names(self.cursor)
-        print(self.collection_names )
+        # print(self.collection_names)
 
     def get_collection_names(self, cursor):
         cursor.execute('show tables')
@@ -53,7 +58,6 @@ class MysqlEngine:
             for k, v in core_.items():
                 self.collection_s_.append(v)
         return self.collection_s_
-
 
     def to_csv(self, query: dict, filename: str, limit: int = 20):
         if not isinstance(query, dict):
@@ -108,20 +112,24 @@ class MysqlEngine:
         if collection_:
             if filename is None:
                 filename = f'{collection_}_{to_str_datetime()}'
+            # cursor = self.mysql_core_.cursor(pymysql.cursors.DictCursor)
+            lock_.acquire()  # get lock
             sql = f"select * from {collection_};"
             self.cursor.execute(sql)
             doc_list_ = self.cursor.fetchall()
-            print(doc_list_)
+            lock_.release()  # release lock
             data = pandas.DataFrame(doc_list_)
-            data.to_csv(path_or_buf=f'{filename}.csv',  encoding=PANDAS_ENCODING)
+            data.to_csv(path_or_buf=f'{filename}.csv', encoding=PANDAS_ENCODING)
 
     def no_collection_to_excel_(self, collection_: str, filename: str):
         if collection_:
             if filename is None:
                 filename = f'{collection_}_{to_str_datetime()}'
+
+            cursor = self.mysql_core_.cursor(pymysql.cursors.DictCursor)
             sql = f"select * from {collection_};"
-            self.cursor.execute(sql)
-            doc_list_ = self.cursor.fetchall()
+            cursor.execute(sql)
+            doc_list_ = cursor.fetchall()
             data = pandas.DataFrame(doc_list_)
             data.to_excel(excel_writer=f'{filename}.xlsx', encoding=PANDAS_ENCODING)
 
@@ -151,23 +159,24 @@ class MysqlEngine:
                         collection_name in
                         collection_names]
             wait(futures_, return_when=ALL_COMPLETED)
-            for future_ in as_completed(futures_):
-                if future_.done():
-                    # print(future_.result())
-                    ...
+            for future_ in futures_:
+                print(future_)
+                ...
 
     def __del__(self):
-        self.cursor.close()
+        # self.cursor.close()
         self.mysql_core_.close()
+        ...
 
 
 if __name__ == '__main__':
-    M = MysqlEngine(host="",
-                    port=3306,
-                    username="",
-                    password="",
-                    database="",
-                    # collection="o"
-                    )
+    M = MysqlEngine(
+        host=os.getenv('MYSQL_HOST'),
+        port=int(os.getenv('MYSQL_PORT')),
+        username=os.getenv('MYSQL_USERNAME'),
+        password=os.getenv('MYSQL_PASSWORD'),
+        database=os.getenv('MYSQL_DATABASE'),
+        # collection=os.getenv('MYSQL_COLLECTION'),
+    )
     M.to_csv(query={}, filename="_")
     # M.to_json()
