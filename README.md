@@ -2,7 +2,7 @@
 
 ## 安装
 ```shell
-pip install v
+pip install fconversion
 ```
 
 ## 基本用法
