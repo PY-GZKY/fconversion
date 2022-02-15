@@ -3,7 +3,7 @@ import os
 import warnings
 from concurrent.futures import ThreadPoolExecutor, wait, as_completed, ALL_COMPLETED
 from typing import Optional
-
+from colorama import init as colorama_init_, Fore
 from dotenv import load_dotenv
 from pandas import DataFrame
 from pymongo import MongoClient
@@ -12,7 +12,7 @@ from src.constants import *
 from src.utils import to_str_datetime, serialize_obj
 
 load_dotenv(verbose=True)
-
+colorama_init_(autoreset=True)
 
 
 class MongoEngine:
@@ -59,9 +59,10 @@ class MongoEngine:
         if self.collection_:
             if filename is None:
                 filename = f'{self.collection}_{to_str_datetime()}'
-            doc_list_ = list(self.collection_.find(query).limit(limit))
+            doc_list_ = list(self.collection_.find(query,{"_id": int(_id)}).limit(limit))
             data = DataFrame(doc_list_)
-            data.to_csv(path_or_buf=f'{filename}.csv', encoding=PANDAS_ENCODING)
+            data.to_csv(path_or_buf=f'{filename}.csv', index=False, encoding=PANDAS_ENCODING)
+            print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_csv_s_()
@@ -74,7 +75,8 @@ class MongoEngine:
                 filename = f'{self.collection}_{to_str_datetime()}'
             doc_list_ = list(self.collection_.find(query).limit(limit))
             data = DataFrame(doc_list_)
-            data.to_excel(excel_writer=f'{filename}.xlsx', sheet_name=filename, encoding=PANDAS_ENCODING)
+            data.to_excel(excel_writer=f'{filename}.xlsx', sheet_name=filename, index=False, encoding=PANDAS_ENCODING)
+            print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_excel_s_()
@@ -88,6 +90,7 @@ class MongoEngine:
             doc_list_ = list(self.collection_.find(query).limit(limit))
             with open(f'{filename}.json', 'w', encoding="utf-8") as f:
                 [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+            print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_json_s_()
@@ -97,21 +100,24 @@ class MongoEngine:
 
     def no_collection_to_csv_(self, collection_: str, filename: str, _id: bool = False):
         if collection_:
-            doc_list_ = list(self.db_[collection_].find({}))
+            doc_list_ = list(self.db_[collection_].find({}, {"_id": int(_id)}))
             data = DataFrame(doc_list_)
-            data.to_csv(path_or_buf=f'{filename}.csv', encoding=PANDAS_ENCODING)
+            data.to_csv(path_or_buf=f'{filename}.csv', index=False, encoding=PANDAS_ENCODING)
+            return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def no_collection_to_excel_(self, collection_: str, filename: str, _id: bool = False):
         if collection_:
             doc_list_ = list(self.db_[collection_].find({}))
             data = DataFrame(doc_list_)
-            data.to_excel(excel_writer=f'{filename}.xlsx', encoding=PANDAS_ENCODING)
+            data.to_excel(excel_writer=f'{filename}.xlsx', index=False, encoding=PANDAS_ENCODING)
+            return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def no_collection_to_json_(self, collection_: str, filename: str, _id: bool = False):
         if collection_:
             doc_list_ = list(self.db_[collection_].find({}))
             with open(f'{filename}.json', 'w', encoding="utf-8") as f:
                 [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+            return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def to_csv_s_(self):
         # todo 如果不指定 collection 则导出此库中所有集合
@@ -131,7 +137,7 @@ class MongoEngine:
             wait(futures_, return_when=ALL_COMPLETED)
             for future_ in as_completed(futures_):
                 if future_.done():
-                    # print(future_.result())
+                    print(future_.result())
                     ...
 
 
@@ -144,6 +150,6 @@ if __name__ == '__main__':
         database=os.getenv('MONGO_DATABASE'),
         collection=os.getenv('MONGO_COLLECTION')
     )
-    M.to_csv(query={}, filename="公司基本信息")
+    M.to_csv(query={}, _id=False, filename="公司基本信息")
     # M.to_excel(query={})
     # M.to_json(query={})

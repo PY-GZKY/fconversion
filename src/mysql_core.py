@@ -61,7 +61,7 @@ class MysqlEngine:
                 self.collection_s_.append(v)
         return self.collection_s_
 
-    def to_csv(self, query: dict, filename: str=None, limit: int = 20):
+    def to_csv(self, query: dict, filename: str = None, limit: int = 20):
         if not isinstance(query, dict):
             raise TypeError('query must be of Dict type.')
         if self.collection:
@@ -71,7 +71,7 @@ class MysqlEngine:
             self.cursor.execute(sql)
             doc_list_ = self.cursor.fetchall()
             data = pandas.DataFrame(doc_list_)
-            data.to_csv(path_or_buf=f'{filename}.csv')
+            data.to_csv(path_or_buf=f'{filename}.csv', index=False, encoding=PANDAS_ENCODING)
             print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
@@ -87,7 +87,7 @@ class MysqlEngine:
             self.cursor.execute(sql)
             doc_list_ = self.cursor.fetchall()
             data = pandas.DataFrame(doc_list_)
-            data.to_excel(path_or_buf=f'{filename}.xlsx')
+            data.to_excel(path_or_buf=f'{filename}.xlsx', index=False, encoding=PANDAS_ENCODING)
             return f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done'
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
@@ -123,7 +123,7 @@ class MysqlEngine:
             doc_list_ = self.cursor.fetchall()
             lock_.release()  # release lock
             data = pandas.DataFrame(doc_list_)
-            data.to_csv(path_or_buf=f'{filename}.csv', encoding=PANDAS_ENCODING)
+            data.to_csv(path_or_buf=f'{filename}.csv', index=False, encoding=PANDAS_ENCODING)
             return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def no_collection_to_excel_(self, collection_: str, filename: str):
@@ -137,7 +137,7 @@ class MysqlEngine:
             doc_list_ = self.cursor.fetchall()
             lock_.release()
             data = pandas.DataFrame(doc_list_)
-            data.to_excel(excel_writer=f'{filename}.xlsx', encoding=PANDAS_ENCODING)
+            data.to_excel(excel_writer=f'{filename}.xlsx', index=False, encoding=PANDAS_ENCODING)
             return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def no_collection_to_json_(self, collection_: str, filename: str):
