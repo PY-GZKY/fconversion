@@ -88,8 +88,9 @@ class MongoEngine:
             if filename is None:
                 filename = f'{self.collection}_{to_str_datetime()}'
             doc_list_ = list(self.collection_.find(query).limit(limit))
+            data = {'RECORDS': doc_list_}
             with open(f'{filename}.json', 'w', encoding="utf-8") as f:
-                [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+                f.write(serialize_obj(data))
             print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
         else:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
@@ -115,8 +116,9 @@ class MongoEngine:
     def no_collection_to_json_(self, collection_: str, filename: str, _id: bool = False):
         if collection_:
             doc_list_ = list(self.db_[collection_].find({}))
+            data = {'RECORDS': doc_list_}
             with open(f'{filename}.json', 'w', encoding="utf-8") as f:
-                [f.write(serialize_obj(data) + "\n") for data in doc_list_]
+                f.write(serialize_obj(data))
             return f'[+] {Fore.GREEN}{collection_} → exported successfully ... done'
 
     def to_csv_s_(self):
@@ -175,6 +177,6 @@ if __name__ == '__main__':
         database=os.getenv('MONGO_DATABASE'),
         collection=os.getenv('MONGO_COLLECTION')
     )
-    M.to_csv(query={}, _id=False, filename="_")
+    # M.to_csv(query={}, _id=False, filename="_")
     # M.to_excel(query={})
-    # M.to_json(query={})
+    M.to_json(query={})
