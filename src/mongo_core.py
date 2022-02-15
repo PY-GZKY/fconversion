@@ -8,6 +8,10 @@ from pymongo import MongoClient
 
 from src.constants import *
 from src.utils import to_str_datetime, serialize_obj
+import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(verbose=True)
+
 
 
 class MongoEngine:
@@ -132,13 +136,13 @@ class MongoEngine:
 
 if __name__ == '__main__':
     M = MongoEngine(
-        host="",
-        port=27017,
-        username="",
-        password="",
-        database="",
-        # collection="xhs_chengdu"
+        host= os.getenv('MONGO_HOST', 'localhost'),
+        port= int(os.getenv('MONGO_PORT', 27017)),
+        username=os.getenv('MONGO_USERNAME'),
+        password=os.getenv('MONGO_PASSWORD'),
+        database=os.getenv('MONGO_DATABASE'),
+        collection=os.getenv('MONGO_COLLECTION', '公司基本信息')
     )
-    M.to_csv(query={}, filename="小红书")
+    M.to_csv(query={}, filename="公司基本信息")
     # M.to_excel(query={})
     # M.to_json(query={})
