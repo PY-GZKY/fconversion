@@ -230,4 +230,5 @@ if __name__ == '__main__':
     # M.to_excel(query={})
     # M.to_json(query={})
     # M.to_pickle(query={})
-    M.to_hdf5(query={})
+    # M.to_hdf5(query={})
+    print(M.to_hdf5.__name__)
