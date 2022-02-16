@@ -9,8 +9,8 @@ from pandas import DataFrame
 import pandas as pd
 from pymongo import MongoClient
 
-from src.constants import *
-from src.utils import to_str_datetime, serialize_obj
+from .constants import *
+from .utils import to_str_datetime, serialize_obj
 
 load_dotenv(verbose=True)
 colorama_init_(autoreset=True)
