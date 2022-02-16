@@ -16,7 +16,7 @@ setup(
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
         'Intended Audience :: System Administrators',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: Apache License',
         'Operating System :: Unix',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
@@ -45,10 +45,14 @@ setup(
         fc=src.cli:cli
     """,
     install_requires=[
-        'aioredis>=1.1.0,<2.0.0',
         'click>=6.7',
-        'pydantic>=1',
-        'dataclasses>=0.6;python_version == "3.8"',
-        'typing-extensions>=3.7;python_version < "3.8"'
+        'colorama==0.4.4',
+        'pandas==1.3.0',
+        'pymongo==3.11.4',
+        'PyMySQL==0.9.3',
+        'python-dotenv==0.19.2',
+        'python_dateutil==2.8.2',
+        'setuptools==60.0.3',
     ],
 )
+
