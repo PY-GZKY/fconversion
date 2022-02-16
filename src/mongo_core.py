@@ -6,6 +6,7 @@ from typing import Optional
 from colorama import init as colorama_init_, Fore
 from dotenv import load_dotenv
 from pandas import DataFrame
+import pandas as pd
 from pymongo import MongoClient
 
 from src.constants import *
@@ -16,9 +17,6 @@ colorama_init_(autoreset=True)
 
 
 class MongoEngine:
-    """
-    MongoEngine Class
-    """
 
     def __init__(
             self,
@@ -96,8 +94,59 @@ class MongoEngine:
             warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
             self.to_json_s_()
 
-    def to_mysql(self):
-        ...
+    def to_pickle(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
+        if not isinstance(query, dict):
+            raise TypeError('query must be of Dict type.')
+        if self.collection_:
+            if filename is None:
+                filename = f'{self.collection}_{to_str_datetime()}'
+            doc_list_ = list(self.collection_.find(query).limit(limit))
+            data = DataFrame(doc_list_)
+            data.to_pickle(path=f'{filename}.pkl')
+            print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
+        else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
+
+    def to_feather(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
+        if not isinstance(query, dict):
+            raise TypeError('query must be of Dict type.')
+        if self.collection_:
+            if filename is None:
+                filename = f'{self.collection}_{to_str_datetime()}'
+            doc_list_ = list(self.collection_.find(query).limit(limit))
+            data = DataFrame(doc_list_)
+            data.to_feather(path=f'{filename}.feather')
+            print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
+        else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
+
+    def to_parquet(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
+        if not isinstance(query, dict):
+            raise TypeError('query must be of Dict type.')
+        if self.collection_:
+            if filename is None:
+                filename = f'{self.collection}_{to_str_datetime()}'
+            doc_list_ = list(self.collection_.find(query).limit(limit))
+            data = DataFrame(doc_list_)
+            data.to_parquet(path=f'{filename}.parquet')
+            print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
+        else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
+
+    def to_hdf5(self, query: dict, filename: str = None, _id: bool = False, limit: int = 20):
+        if not isinstance(query, dict):
+            raise TypeError('query must be of Dict type.')
+        if self.collection_:
+            if filename is None:
+                filename = f'{self.collection}_{to_str_datetime()}'
+            doc_list_ = list(self.collection_.find(query).limit(limit))
+            data = DataFrame(doc_list_)
+            h5 = pd.HDFStore(f'.{filename}.h5', 'w', complevel=4, complib='blosc')
+            h5['df_'] = data
+            h5.close()
+            print(f'[+] {Fore.GREEN}{self.collection} → exported successfully ... done')
+        else:
+            warnings.warn('No collection specified, All collections will be exported.', DeprecationWarning)
 
     def no_collection_to_csv_(self, collection_: str, filename: str, _id: bool = False):
         if collection_:
@@ -179,4 +228,6 @@ if __name__ == '__main__':
     )
     # M.to_csv(query={}, _id=False, filename="_")
     # M.to_excel(query={})
-    M.to_json(query={})
+    # M.to_json(query={})
+    # M.to_pickle(query={})
+    M.to_hdf5(query={})
