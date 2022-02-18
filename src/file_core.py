@@ -1,13 +1,13 @@
 # -*- coding:utf-8 -*-
 import datetime
 import os
-
+import pdfkit
 import fitz
 from PIL import Image
 from colorama import init as colorama_init_
 from dotenv import load_dotenv
 from moviepy.editor import VideoFileClip
-
+from src.utils import _merge_img
 load_dotenv(verbose=True)
 colorama_init_(autoreset=True)
 
@@ -49,7 +49,7 @@ class FileEngine():
     def mp3_to_text(self):
         ...
 
-    def pdf_to_image(self, source_file: str, target_file: str, zoom_x: int = 4, zoom_y: int = 4):
+    def pdf_to_image(self, source_file: str, target_file: str, zoom_x: int = 4, zoom_y: int = 4, is_merge:bool=False):
         """
         pip install fitz PyMuPDF
         """
@@ -73,16 +73,21 @@ class FileEngine():
 
             pix.writePNG(f'{target_file}/image_{pg}.png')  # 将图片写入指定的文件夹内
 
+        if is_merge:
+            _merge_img(img_list=[])
+
         end_time_ = datetime.datetime.now()  # 结束时间
         print('操作时间: ', (end_time_ - start_time_).seconds)
 
-    def html_to_pdf(self, wkhtmltopdf_path: str = r'D:\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'):
+    def html_to_pdf(self, wkhtmltopdf_path: str):
         """
         pip install pdfkit
         并且依赖于 wkhtmltopdf 环境
         :return:
         """
-        import pdfkit
+        if wkhtmltopdf_path is None:
+            raise ValueError("wkhtmltopdf path cannot be empty")
+
         url = 'https://zhuanlan.zhihu.com/p/94608155'  # 一篇博客的url
         confg = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         pdfkit.from_url(url, './下载文件.pdf', configuration=confg)

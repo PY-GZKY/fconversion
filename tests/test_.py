@@ -22,7 +22,7 @@ def setup_function():
 #                      "joyfulpandas/images_2.png"])
 
 def test_html_to_pdf():
-    M.html_to_pdf()
+    M.html_to_pdf(wkhtmltopdf_path=r'D:\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
 
 def teardown_function():
     ...
