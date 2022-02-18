@@ -4,6 +4,6 @@ __pycache__/
 *$py.class
 readme_.md
 .idea/
-.egg-info
+.egg-info/
 dist/
 .env
