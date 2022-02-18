@@ -7,3 +7,5 @@ readme_.md
 .egg-info/
 dist/
 .env
+joyfulpandas/
+.pdf
