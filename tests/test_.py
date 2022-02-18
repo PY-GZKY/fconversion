@@ -12,8 +12,8 @@ def setup_function():
     M = FileEngine()
 
 
-# def test_pdf_to_img():
-#     M.pdf_to_image(source_file="joyfulpandas.pdf", target_file="joyfulpandas")
+def test_pdf_to_img():
+    M.pdf_to_image(source_file="joyfulpandas.pdf", target_file="joyfulpandas")
     # assert "successfully" in result_
 
 # def test_merge_img():
@@ -21,8 +21,8 @@ def setup_function():
 #                      "joyfulpandas/images_1.png",
 #                      "joyfulpandas/images_2.png"])
 
-def test_html_to_pdf():
-    M.html_to_pdf(wkhtmltopdf_path=r'D:\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+# def test_html_to_pdf():
+#     M.html_to_pdf(wkhtmltopdf_path=r'D:\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
 
 def teardown_function():
     ...
