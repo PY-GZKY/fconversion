@@ -54,6 +54,7 @@ def serialize_obj(obj):
         return json.dumps(dict(obj), ensure_ascii=False, default=_alchemy_encoder)
 
 
+
 def _merge_img(img_list, target_file: str = "images.png"):
     """拼接图片"""
     # todo 1、图片列表排序问题 2、

@@ -1,5 +1,8 @@
 # -*- coding:utf-8 -*-
+import datetime
 import os
+import time
+from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
 import fitz
 import pdfkit
@@ -8,8 +11,6 @@ from alive_progress import alive_bar
 from colorama import init as colorama_init_
 from dotenv import load_dotenv
 from moviepy.editor import VideoFileClip
-
-from src.utils import _merge_img
 
 load_dotenv(verbose=True)
 colorama_init_(autoreset=True)
@@ -52,8 +53,7 @@ class FileEngine():
     def mp3_to_text(self):
         ...
 
-    def pdf_to_image(self, source_file: str, target_file: str=None, zoom_x: int = 4, zoom_y: int = 4,
-                     is_merge: bool = False):
+    def pdf_to_image(self, source_file: str, target_file: str = None, is_merge: bool = False):
         """
         pip install fitz PyMuPDF
         """
@@ -63,26 +63,29 @@ class FileEngine():
             target_file = "."
         if not os.path.exists(target_file):  # 判断存放图片的文件夹是否存在
             os.makedirs(target_file)  # 若图片文件夹不存在就创建
-
+        start_time_ = datetime.datetime.now()  # 时间
         pdf_doc_ = fitz.open(source_file)
+        page_count_ = pdf_doc_.pageCount
+        # print(page_count_)
         # todo 1、此处应当加入多线程 2、图片命名(后面合并用)
-        with alive_bar(pdf_doc_.pageCount, title=f'{source_file} → {target_file} loading ...', bar="blocks",
-                       spinner="elements") as bar:
-            for pg in range(pdf_doc_.pageCount):
-                page = pdf_doc_[pg]
-                rotate = int(0)
-                # 每个尺寸的缩放系数为1.3，这将为我们生成分辨率提高2.6的图像。
-                # 此处若是不做设置，默认图片大小为：792X612, dpi=96
-                trans = fitz.Matrix(zoom_x, zoom_y).preRotate(rotate)
-                pix = page.getPixmap(matrix=trans, alpha=False)  # alpha=False 白色背景  不透明
-                pix.writePNG(f'{target_file}/image_{pg}.png')  # 将图片写入指定的文件夹内
-                bar()  # 更新控制台进度条
+        with alive_bar(page_count_, title=f'{source_file} → {target_file}', bar="blocks", spinner="elements") as bar:
+            with ThreadPoolExecutor(max_workers=8) as executor:
+                for index, v in enumerate(pdf_doc_):
+                    # 更新控制台进度条
+                    executor.submit(self.write_image_, v, target_file, index).add_done_callback(lambda func: bar())
+        end_time_ = datetime.datetime.now()  # 结束时间
+        print('操作时间: ', (end_time_ - start_time_).seconds)
 
-        if is_merge:
-            _merge_img(img_list=[])
 
-        # end_time_ = datetime.datetime.now()  # 结束时间
-        # print('操作时间: ', (end_time_ - start_time_).seconds)
+    def write_image_(self, page, target_file: str, pg: int, zoom_x: int = 4, zoom_y: int = 4):
+        print("pg: ",pg)
+        rotate = int(0)
+        # 每个尺寸的缩放系数为1.3，这将为我们生成分辨率提高2.6的图像。
+        # 此处若是不做设置，默认图片大小为：792X612, dpi=96
+        trans = fitz.Matrix(zoom_x, zoom_y).preRotate(rotate)
+        pix = page.getPixmap(matrix=trans, alpha=False)  # alpha=False 白色背景  不透明
+        pix.writePNG(f'{target_file}/image_{pg}.png')  # 将图片写入指定的文件夹内
+        # time.sleep(5)
 
     def html_to_pdf(self, wkhtmltopdf_path: str):
         """
@@ -99,6 +102,8 @@ class FileEngine():
 
         # pdfkit.from_file('my.html', '下载文件2.pdf',configuration=confg)
         # pdfkit.from_string('wocao, '下载文件3.pdf', configuration=config)
+
+
 
 
 if __name__ == '__main__':
