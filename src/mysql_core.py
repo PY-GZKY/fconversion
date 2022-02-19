@@ -164,7 +164,7 @@ class MysqlEngine:
 
     def concurrent_(self, func, collection_names):
         # todo 这里并发时需要加线程锁
-        with ThreadPoolExecutor(max_workers=THREAD_POOL_MAX_WORKERS) as executor:
+        with ThreadPoolExecutor(max_workers=POOL_MAX_WORKERS) as executor:
             futures_ = [executor.submit(func, collection_name, collection_name) for
                         collection_name in
                         collection_names]

@@ -7,7 +7,7 @@ import fitz
 import pdfkit
 from PIL import Image
 from alive_progress import alive_bar
-from colorama import init as colorama_init_,Fore
+from colorama import init as colorama_init_, Fore
 from dotenv import load_dotenv
 # from moviepy.editor import VideoFileClip
 from win32com.client import constants, gencache
@@ -93,6 +93,7 @@ class FileEngine():
             target_file = "."
         if not os.path.exists(target_file):  # 判断存放图片的文件夹是否存在
             os.makedirs(target_file)  # 若图片文件夹不存在就创建
+
         # start_time_ = datetime.datetime.now()  # 时间
         pdf_doc_ = fitz.open(source_file)
         page_count_ = 30  # pdf_doc_.page_count
@@ -106,7 +107,6 @@ class FileEngine():
                     executor.submit(write_image_, pdf_doc_[pg], pg, trans, target_file).add_done_callback(
                         lambda func: bar())
                 executor.shutdown()
-
         pdf_doc_.close()
 
         if is_merge:

@@ -88,7 +88,7 @@ def merge_img_(img_list: typing.List, target_file: str = None):
     right = height_size
     target = PIL_Image.new(color_mod, (total_width, total_height))  # 最终拼接的图像的大小
     merge_time_ = int((len(img_list) / 3))
-    with alive_progress.alive_bar(len(img_list) + merge_time_, title=f'{Fore.GREEN}正在合并 → {target_file}',
+    with alive_progress.alive_bar(len(img_list) + merge_time_,title=f'{Fore.GREEN}正在合并 → {target_file}',
                                   bar="blocks", spinner="elements") as bar:
         for img in img_list:
             target.paste(PIL_Image.open(img), (0, left, total_width, right))
