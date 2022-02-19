@@ -9,8 +9,8 @@ import pymysql
 from colorama import init as colorama_init_, Fore
 from dotenv import load_dotenv
 
-from src.constants import *
-from src.utils import to_str_datetime, serialize_obj
+from fconversion.constants import *
+from fconversion.utils import to_str_datetime, serialize_obj
 
 colorama_init_(autoreset=True)
 load_dotenv(verbose=True)

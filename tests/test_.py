@@ -1,8 +1,8 @@
 import dotenv
 import pytest
 
-from src.file_core import FileEngine
-from src.utils import _merge_img
+from fconversion.file_core import FileEngine
+from fconversion.utils import _merge_img
 
 dotenv.load_dotenv(verbose=True)
 

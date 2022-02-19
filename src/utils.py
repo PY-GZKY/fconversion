@@ -9,12 +9,12 @@ import typing
 import uuid
 
 import alive_progress
-from PIL import Image as PIL_Image
+from PIL import Image
 from bson import ObjectId
 from colorama import init as colorama_init_, Fore
 from dateutil import tz
 
-from src.constants import TIME_ZONE
+from constants import TIME_ZONE
 
 colorama_init_(autoreset=True)
 
@@ -62,7 +62,7 @@ def serialize_obj(obj):
 
 def write_image_(page, pg: int, trans, target_file: str):
     pix = page.get_pixmap(matrix=trans, alpha=False)  # alpha=False 白色背景  不透明
-    pix.save(f'{target_file}/image_{pg}.jpg')  # 将图片写入指定的文件夹内
+    pix.save(f'{target_file}/image_{pg}.jpg')
 
 
 def sort_key(s):
@@ -79,19 +79,20 @@ def merge_img_(img_list: typing.List, target_file: str = None):
 
     """拼接图片"""
     color_mod = 'RGB'  # jpeg格式不支持RGBA 'RGBA' if img_list_[0].endswith('.jpg') else
-    first_img = PIL_Image.open(img_list[0])
+    first_img = Image.open(img_list[0])
     height_size = first_img.size[1]
     total_width = first_img.size[0]
     # print(f"获取图像大小为: {height_size},{total_width}", )
     total_height = height_size * len(img_list)  # 合并图总高度
     left = 0
     right = height_size
-    target = PIL_Image.new(color_mod, (total_width, total_height))  # 最终拼接的图像的大小
+    target = Image.new(color_mod, (total_width, total_height))  # 最终拼接的图像的大小
     merge_time_ = int((len(img_list) / 3))
-    with alive_progress.alive_bar(len(img_list) + merge_time_,title=f'{Fore.GREEN}正在合并 → {target_file}',
-                                  bar="blocks", spinner="elements") as bar:
+    merge_time_ = merge_time_ if merge_time_ != 0 else 1
+    with alive_progress.alive_bar(len(img_list) + merge_time_, title=f'{Fore.GREEN}正在合并 → {target_file}',
+                                  bar="blocks", ) as bar:
         for img in img_list:
-            target.paste(PIL_Image.open(img), (0, left, total_width, right))
+            target.paste(Image.open(img), (0, left, total_width, right))
             left += height_size
             right += height_size
             bar()

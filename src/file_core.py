@@ -9,11 +9,11 @@ from PIL import Image
 from alive_progress import alive_bar
 from colorama import init as colorama_init_, Fore
 from dotenv import load_dotenv
+from utils import write_image_, merge_img_, sort_key
 # from moviepy.editor import VideoFileClip
 from win32com.client import constants, gencache
 
-from src.constants import POOL_MAX_WORKERS
-from src.utils import write_image_, merge_img_, sort_key
+from constants import POOL_MAX_WORKERS
 
 load_dotenv(verbose=True)
 colorama_init_(autoreset=True)
@@ -83,25 +83,23 @@ class FileEngine():
         # cv.close()
 
     def pdf_to_image(self, source_file: str, target_file: str = None, zoom_x: int = 4, zoom_y: int = 4,
-                     is_merge: bool = False):
+                     is_merge: bool = False, merge_path: str = None):
         """
-        pip install fitz PyMuPDF
+        pip install fitz, PyMuPDF
         """
         if not source_file.upper().endswith(".PDF"):
             raise TypeError("source file must be of pdf type")
         if target_file is None:
             target_file = "."
-        if not os.path.exists(target_file):  # 判断存放图片的文件夹是否存在
-            os.makedirs(target_file)  # 若图片文件夹不存在就创建
+        if not os.path.exists(target_file):
+            os.makedirs(target_file)
 
-        # start_time_ = datetime.datetime.now()  # 时间
         pdf_doc_ = fitz.open(source_file)
-        page_count_ = 30  # pdf_doc_.page_count
+        page_count_ = pdf_doc_.page_count
         rotate = int(0)
         trans = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
 
-        with alive_bar(page_count_, title=f'{Fore.GREEN}正在导出 {source_file} → {target_file}', bar="blocks",
-                       spinner="elements") as bar:
+        with alive_bar(page_count_, title=f'{Fore.GREEN}正在导出 {source_file} → {target_file}', bar="blocks") as bar:
             with ThreadPoolExecutor(max_workers=POOL_MAX_WORKERS) as executor:
                 for pg in range(page_count_):
                     executor.submit(write_image_, pdf_doc_[pg], pg, trans, target_file).add_done_callback(
@@ -110,14 +108,13 @@ class FileEngine():
         pdf_doc_.close()
 
         if is_merge:
+            if merge_path is None:
+                merge_path = "merge_.png"
             imgs = []
             for root, dirs, files in os.walk(target_file): imgs = files
             imgs.sort(key=sort_key)
             img_list = [f'{target_file}/{img}' for img in imgs]
-            merge_img_(img_list=img_list, target_file="h_.png")
-
-        # end_time_ = datetime.datetime.now()  # 结束时间
-        # print('操作时间: ', (end_time_ - start_time_).seconds)
+            merge_img_(img_list=img_list, target_file=merge_path)
 
     def html_to_pdf(self, wkhtmltopdf_path: str, html_file: str = None,
                     url: str = 'https://zhuanlan.zhihu.com/p/94608155'):
@@ -139,6 +136,6 @@ class FileEngine():
 if __name__ == '__main__':
     M = FileEngine()
     # M.png_to_jpg(source_file="images.png",target_file="./joyfulpandas.jpg")
-    M.pdf_to_image(source_file="./joyfulpandas.pdf", target_file="./joyfulpandas", is_merge=True)
+    M.pdf_to_image(source_file="./resume.pdf", target_file="./resume", is_merge=True, merge_path="./resume.png")
     # M.word_to_pdf(source_file="E:/Py_Word_Code/fconversion/src/resume.docx",
     #               target_file="E:/Py_Word_Code/fconversion/src/resume.pdf")
