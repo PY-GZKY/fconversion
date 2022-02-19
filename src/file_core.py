@@ -2,7 +2,8 @@
 import datetime
 import os
 import time
-from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
+# from pydub import AudioSegment
+from concurrent.futures import ThreadPoolExecutor
 
 import fitz
 import pdfkit
@@ -11,6 +12,7 @@ from alive_progress import alive_bar
 from colorama import init as colorama_init_
 from dotenv import load_dotenv
 from moviepy.editor import VideoFileClip
+from win32com.client import constants, gencache
 
 load_dotenv(verbose=True)
 colorama_init_(autoreset=True)
@@ -34,24 +36,48 @@ class FileEngine():
     def jpg_to_png(self):
         ...
 
-    def mp4_to_mp3(self):
-        ...
-
-    def flv_to_mp3(self, source_file: str, target_file: str):
-        """
-        :param source_file: .fly
-        :param target_file: .mp3
-        :return:
-        """
+    def video_to_audio(self, source_file: str, target_file: str):
         video = VideoFileClip(source_file)
         audio = video.audio
         audio.write_audiofile(target_file)
 
-    def mp4_to_wav(self):
+    def audio_to_audio(self, source_file: str, target_file: str):
+        """
+        pip install pydub
+        :param source_file: .fly .mp3 .wav .ogg .flac
+        :param target_file: .fly .mp3 .wav .ogg .flac
+        :return:
+        """
+        # song = AudioSegment.from_wav("Python.wav")
+        # song.export("Python.mp3", format="mp3")
+
+    def audio_to_text(self):
         ...
 
-    def mp3_to_text(self):
-        ...
+    def word_to_pdf(self, source_file: str, target_file: str = None):
+        """
+        word转pdf 只作用于 windows 平台
+        :param wordPath: word文件路径
+        :param pdfPath:  生成pdf文件路径
+        """
+        word = gencache.EnsureDispatch('Word.Application')
+        doc = word.Documents.Open(source_file, ReadOnly=1)
+        doc.ExportAsFixedFormat(target_file, constants.wdExportFormatPDF,
+                                Item=constants.wdExportDocumentWithMarkup,
+                                CreateBookmarks=constants.wdExportCreateHeadingBookmarks)
+        word.Quit(constants.wdDoNotSaveChanges)
+
+    def pdf_to_word(self, source_file: str, target_file: str = None, ):
+        """
+        from pdf2docx import Converter
+        """
+        # pdf_file = '/path/to/sample.pdf'
+        # docx_file = 'path/to/sample.docx'
+        #
+        # # convert pdf to docx
+        # cv = Converter(pdf_file)
+        # cv.convert(docx_file, start=0, end=None)
+        # cv.close()
 
     def pdf_to_image(self, source_file: str, target_file: str = None, is_merge: bool = False):
         """
@@ -76,16 +102,15 @@ class FileEngine():
         end_time_ = datetime.datetime.now()  # 结束时间
         print('操作时间: ', (end_time_ - start_time_).seconds)
 
-
     def write_image_(self, page, target_file: str, pg: int, zoom_x: int = 4, zoom_y: int = 4):
-        print("pg: ",pg)
+        print("pg: ", pg)
         rotate = int(0)
         # 每个尺寸的缩放系数为1.3，这将为我们生成分辨率提高2.6的图像。
         # 此处若是不做设置，默认图片大小为：792X612, dpi=96
         trans = fitz.Matrix(zoom_x, zoom_y).preRotate(rotate)
         pix = page.getPixmap(matrix=trans, alpha=False)  # alpha=False 白色背景  不透明
         pix.writePNG(f'{target_file}/image_{pg}.png')  # 将图片写入指定的文件夹内
-        # time.sleep(5)
+        time.sleep(5)
 
     def html_to_pdf(self, wkhtmltopdf_path: str):
         """
@@ -104,8 +129,8 @@ class FileEngine():
         # pdfkit.from_string('wocao, '下载文件3.pdf', configuration=config)
 
 
-
-
 if __name__ == '__main__':
     M = FileEngine()
-    M.pdf_to_image(source_file="joyfulpandas.pdf", target_file="joyfulpandas")
+    # M.pdf_to_image(source_file="joyfulpandas.pdf", target_file="joyfulpandas")
+    M.word_to_pdf(source_file="E:/Py_Word_Code/fconversion/src/resume.docx",
+                  target_file="E:/Py_Word_Code/fconversion/src/resume.pdf")
