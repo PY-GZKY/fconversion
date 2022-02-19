@@ -1,20 +1,19 @@
 # -*- coding:utf-8 -*-
-import datetime
 import os
 # from pydub import AudioSegment
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 
 import fitz
 import pdfkit
 from PIL import Image
 from alive_progress import alive_bar
-from colorama import init as colorama_init_
+from colorama import init as colorama_init_,Fore
 from dotenv import load_dotenv
 # from moviepy.editor import VideoFileClip
 from win32com.client import constants, gencache
 
 from src.constants import POOL_MAX_WORKERS
-from src.utils import write_image_
+from src.utils import write_image_, merge_img_, sort_key
 
 load_dotenv(verbose=True)
 colorama_init_(autoreset=True)
@@ -94,13 +93,14 @@ class FileEngine():
             target_file = "."
         if not os.path.exists(target_file):  # 判断存放图片的文件夹是否存在
             os.makedirs(target_file)  # 若图片文件夹不存在就创建
-        start_time_ = datetime.datetime.now()  # 时间
+        # start_time_ = datetime.datetime.now()  # 时间
         pdf_doc_ = fitz.open(source_file)
-        page_count_ = 200  # pdf_doc_.page_count
+        page_count_ = 30  # pdf_doc_.page_count
         rotate = int(0)
         trans = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
 
-        with alive_bar(page_count_, title=f'{source_file} → {target_file}', bar="blocks", spinner="elements") as bar:
+        with alive_bar(page_count_, title=f'{Fore.GREEN}正在导出 {source_file} → {target_file}', bar="blocks",
+                       spinner="elements") as bar:
             with ThreadPoolExecutor(max_workers=POOL_MAX_WORKERS) as executor:
                 for pg in range(page_count_):
                     executor.submit(write_image_, pdf_doc_[pg], pg, trans, target_file).add_done_callback(
@@ -115,8 +115,16 @@ class FileEngine():
         #         print(process_results)
 
         pdf_doc_.close()
-        end_time_ = datetime.datetime.now()  # 结束时间
-        print('操作时间: ', (end_time_ - start_time_).seconds)
+
+        if is_merge:
+            imgs = []
+            for root, dirs, files in os.walk(target_file): imgs = files
+            imgs.sort(key=sort_key)
+            img_list = [f'{target_file}/{img}' for img in imgs]
+            merge_img_(img_list=img_list, target_file="h_.png")
+
+        # end_time_ = datetime.datetime.now()  # 结束时间
+        # print('操作时间: ', (end_time_ - start_time_).seconds)
 
     def html_to_pdf(self, wkhtmltopdf_path: str, html_file: str = None,
                     url: str = 'https://zhuanlan.zhihu.com/p/94608155'):
@@ -137,6 +145,7 @@ class FileEngine():
 
 if __name__ == '__main__':
     M = FileEngine()
-    M.pdf_to_image(source_file="joyfulpandas.pdf", target_file="joyfulpandas")
+    # M.png_to_jpg(source_file="images.png",target_file="./joyfulpandas.jpg")
+    M.pdf_to_image(source_file="./joyfulpandas.pdf", target_file="./joyfulpandas", is_merge=True)
     # M.word_to_pdf(source_file="E:/Py_Word_Code/fconversion/src/resume.docx",
     #               target_file="E:/Py_Word_Code/fconversion/src/resume.pdf")

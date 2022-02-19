@@ -8,4 +8,7 @@ readme_.md
 dist/
 .env
 joyfulpandas/
-.pdf
+*.pdf
+*.docx
+*.jpg
+*.png
