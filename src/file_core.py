@@ -107,13 +107,6 @@ class FileEngine():
                         lambda func: bar())
                 executor.shutdown()
 
-        # with alive_bar(page_count_, title=f'{source_file} → {target_file}', bar="blocks", spinner="elements") as bar:
-        #     with ProcessPoolExecutor(max_workers=POOL_MAX_WORKERS) as executor:
-        #         task_list = [executor.submit(write_image_, pdf_doc_, pg, trans, target_file) for pg in
-        #                      range(page_count_)]
-        #         process_results = [task.result() for task in as_completed(task_list)]
-        #         print(process_results)
-
         pdf_doc_.close()
 
         if is_merge:
