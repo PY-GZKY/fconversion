@@ -98,8 +98,8 @@ class FileEngine():
         page_count_ = pdf_doc_.page_count
         rotate = int(0)
         trans = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
-
-        with alive_bar(page_count_, title=f'{Fore.GREEN}正在导出 {source_file} → {target_file}', bar="blocks") as bar:
+        title_ = f'{Fore.GREEN}正在导出 {source_file} → {target_file}'
+        with alive_bar(page_count_, title=title_, bar="blocks") as bar:
             with ThreadPoolExecutor(max_workers=POOL_MAX_WORKERS) as executor:
                 for pg in range(page_count_):
                     executor.submit(write_image_, pdf_doc_[pg], pg, trans, target_file).add_done_callback(

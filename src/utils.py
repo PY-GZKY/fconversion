@@ -19,11 +19,11 @@ from constants import TIME_ZONE
 colorama_init_(autoreset=True)
 
 
-def get_user_name():
+def get_user_name() -> str:
     return getpass.getuser()
 
 
-def gen_uuid():
+def gen_uuid() -> str:
     return str(uuid.uuid4())
 
 
@@ -40,7 +40,7 @@ def ms_to_datetime(unix_ms: int) -> datetime:
     return datetime.datetime.fromtimestamp(unix_ms / 1000, tz=tz_)
 
 
-def to_str_datetime():
+def to_str_datetime() -> str:
     return datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S%f')
 
 
@@ -65,7 +65,7 @@ def write_image_(page, pg: int, trans, target_file: str):
     pix.save(f'{target_file}/image_{pg}.jpg')
 
 
-def sort_key(s):
+def sort_key(s) -> int:
     try:
         c = re.findall('\d+', s)[0]
     except:
@@ -89,8 +89,9 @@ def merge_img_(img_list: typing.List, target_file: str = None):
     target = Image.new(color_mod, (total_width, total_height))  # 最终拼接的图像的大小
     merge_time_ = int((len(img_list) / 3))
     merge_time_ = merge_time_ if merge_time_ != 0 else 1
-    with alive_progress.alive_bar(len(img_list) + merge_time_, title=f'{Fore.GREEN}正在合并 → {target_file}',
-                                  bar="blocks", ) as bar:
+    total_ = len(img_list) + merge_time_
+    title_ = f'{Fore.GREEN}正在合并 → {target_file}'
+    with alive_progress.alive_bar(total_, title=title_, bar="blocks") as bar:
         for img in img_list:
             target.paste(Image.open(img), (0, left, total_width, right))
             left += height_size
