@@ -5,7 +5,7 @@ import getpass
 import json
 import re
 import time
-import typing
+from typing import List
 import uuid
 
 import alive_progress
@@ -73,7 +73,7 @@ def sort_key(s) -> int:
     return int(c)
 
 
-def merge_img_(img_list: typing.List, target_file: str = None):
+def merge_img_(img_list: List, target_file: str = None):
     if target_file is None:
         target_file = "merge_.png"
 
