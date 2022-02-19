@@ -3,9 +3,10 @@ import datetime
 import decimal
 import getpass
 import json
+import threading
 import time
 import uuid
-
+import fitz
 from PIL import Image as PIL_Image
 from bson import ObjectId
 from dateutil import tz
@@ -54,6 +55,14 @@ def serialize_obj(obj):
         return json.dumps(dict(obj), ensure_ascii=False, default=_alchemy_encoder)
 
 
+# todo 读取 pdf 图片到目录
+
+def write_image_(page, pg: int, trans, target_file: str):
+    pix = page.get_pixmap(matrix=trans, alpha=False)  # alpha=False 白色背景  不透明
+    pix.save(f'{target_file}/image_{pg}.png')  # 将图片写入指定的文件夹内
+    return 123456
+    # time.sleep(5)
+
 
 def _merge_img(img_list, target_file: str = "images.png"):
     """拼接图片"""
@@ -77,5 +86,3 @@ def _merge_img(img_list, target_file: str = "images.png"):
         return img_name
     else:
         return
-
-
