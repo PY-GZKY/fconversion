@@ -13,7 +13,7 @@ def setup_function():
 
 
 def test_pdf_to_img():
-    M.pdf_to_image(source_file="joyfulpandas.pdf", target_file="joyfulpandas")
+    pdf_to_image(source_file="joyfulpandas.pdf", target_file="joyfulpandas")
     # assert "successfully" in result_
 
 # def test_merge_img():
