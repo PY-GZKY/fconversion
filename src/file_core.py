@@ -8,11 +8,8 @@ colorama_init_(autoreset=True)
 
 class FileEngine:
     """
-    这里改写什么
+    这里写什么
     """
-
-    def __init__(self):
-        ...
 
 
 if __name__ == '__main__':
@@ -23,4 +20,4 @@ if __name__ == '__main__':
     #               target_file="E:/Py_Word_Code/fconversion/src/resume.pdf")
 
     # html2pdf(wkhtmltopdf_path=r'D:\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
-    M.html2image(wkhtmltoimage_path=r'D:\\wkhtmltopdf\\bin\\wkhtmltoimage.exe')
+    # M.html2image(wkhtmltoimage_path=r'D:\\wkhtmltopdf\\bin\\wkhtmltoimage.exe')
