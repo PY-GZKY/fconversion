@@ -5,8 +5,8 @@ import getpass
 import json
 import re
 import time
-from typing import List
 import uuid
+from typing import List
 
 import alive_progress
 from PIL import Image
