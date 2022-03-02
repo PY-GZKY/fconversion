@@ -13,3 +13,15 @@ def word2pdf(source_file: str, target_file: str = None):
                             Item=constants.wdExportDocumentWithMarkup,
                             CreateBookmarks=constants.wdExportCreateHeadingBookmarks)
     word.Quit(constants.wdDoNotSaveChanges)
+
+
+def word2html(source_file: str, target_file: str = None):
+    """
+    word2html 只作用于 windows 平台
+    """
+
+
+def word2image(source_file: str, target_file: str = None):
+    """
+
+    """
