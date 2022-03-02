@@ -8,7 +8,6 @@ import pandas
 import pymysql
 from colorama import init as colorama_init_, Fore
 from dotenv import load_dotenv
-
 from fconversion.constants import *
 from fconversion.utils import to_str_datetime, serialize_obj
 
