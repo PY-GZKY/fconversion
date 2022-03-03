@@ -7,7 +7,10 @@ except ModuleNotFoundError as e:
     os.system("pip install pymdown-extensions")
     from pymdownx import superfences
 
-WKHTMLTOPDF_PATH = r'./wkhtmltopdf./bin./wkhtmltopdf.exe'  # 安装位置
+# WKHTMLTOPDF_PATH = 'E:/Py_Word_Code/fconversion/src/bin/wkhtmltopdf.exe'  # 安装位置
+# WKHTMLTOIMAGE_PATH = 'E:/Py_Word_Code/fconversion/src/bin/wkhtmltoimage.exe'  # 安装位置
+WKHTMLTOPDF_PATH = 'D:/wkhtmltopdf/bin/wkhtmltopdf.exe'  # 安装位置
+WKHTMLTOIMAGE_PATH = 'D:/wkhtmltopdf/bin/wkhtmltoimage.exe'  # 安装位置
 PANDAS_ENCODING = 'utf_8_sig'
 TIME_ZONE = 'Asia/Shanghai'
 
