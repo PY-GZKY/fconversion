@@ -13,7 +13,7 @@ WKHTMLTOPDF_PATH = r'D:/wkhtmltopdf/bin/wkhtmltopdf.exe'  # 安装位置
 WKHTMLTOIMAGE_PATH = r'D:/wkhtmltopdf/bin/wkhtmltoimage.exe'  # 安装位置
 ENCODING_ = 'utf_8_sig'
 TIME_ZONE = 'Asia/Shanghai'
-
+POOL_MAX_WORKERS = 8
 # 扩展配置
 MD_EXTENSIONS = [
     'toc',  # 目录，[toc]
