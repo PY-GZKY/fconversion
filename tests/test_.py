@@ -1,28 +1,25 @@
 import dotenv
 import pytest
 
-from fconversion.file_core import FileEngine
-from fconversion.utils import _merge_img
+from src.func_.markdown_ import Markdown
 
 dotenv.load_dotenv(verbose=True)
 
 
 def setup_function():
     global M
-    M = FileEngine()
+    M = Markdown()
 
 
-def test_pdf_to_img():
-    pdf_to_image(source_file="joyfulpandas.pdf", target_file="joyfulpandas")
-    # assert "successfully" in result_
+# def test_markdown2pdf():
+#     markdown2pdf(input_file='../README.md', output_file='./README.pdf')
 
-# def test_merge_img():
-#     _merge_img(img_list=["joyfulpandas/images_0.png",
-#                      "joyfulpandas/images_1.png",
-#                      "joyfulpandas/images_2.png"])
 
-# def test_html_to_pdf():
-#     M.html_to_pdf(wkhtmltopdf_path=r'D:\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+
+def test_markdown2html():
+    M.markdown2html(input_file='./tf_/春回大地.md', output_file='./tf_/春回大地.html')
+
+
 
 def teardown_function():
     ...
