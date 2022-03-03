@@ -7,7 +7,7 @@ readme_.md
 .egg-info/
 dist/
 .env
-joyfulpandas/
+tf_/
 *.pdf
 *.docx
 *.jpg
