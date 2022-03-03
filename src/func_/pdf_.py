@@ -6,6 +6,11 @@ import fitz
 from alive_progress import alive_bar
 
 
+def pdf2epub():
+    """
+    """
+
+
 def pdf2word(self, source_file: str, target_file: str = None, ):
     """
     转换为可编辑
