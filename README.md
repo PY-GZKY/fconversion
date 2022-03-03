@@ -6,9 +6,8 @@
 </p>
 
 
-
 <p align="center">
-↻ 一个 <a href="https://fconversion.readthedocs.io/">fconversion</a> 数据库转换为表格文件的库 <br>
+↻ 一个用于各类文件格式转换的库 <br>
 有关更多 <a href="https://fconversion.readthedocs.io/">fconversion</a>  的详细信息, 请参阅文档。
 </p>
 
