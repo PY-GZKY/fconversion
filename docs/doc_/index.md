@@ -20,7 +20,19 @@ pip install fconversion
 
 ## 基本用法
 
-### 快速开始
+
+### _markdown_
+- 目前不支持数学公式
+- 目前不支持流程图
+
+### _pdf_
+### _word_
+### _html_
+### _image_
+### _csv_
+### _excel_
+### _video_
+### _audio_
 
 ## 关于命令行
 
