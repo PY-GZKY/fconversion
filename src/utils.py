@@ -14,7 +14,7 @@ from bson import ObjectId
 from colorama import init as colorama_init_, Fore
 from dateutil import tz
 
-from constants import TIME_ZONE
+from src.constants import TIME_ZONE
 
 colorama_init_(autoreset=True)
 
