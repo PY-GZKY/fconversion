@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
-import datetime
-import decimal
 import getpass
-import json
 import re
-import time
 import uuid
 from typing import List
 
 import alive_progress
 from PIL import Image
-from bson import ObjectId
 from colorama import init as colorama_init_, Fore
-from dateutil import tz
-
-from src.constants import TIME_ZONE
+from pymdownx import superfences
 
 colorama_init_(autoreset=True)
 
@@ -27,50 +20,91 @@ def gen_uuid() -> str:
     return str(uuid.uuid4())
 
 
-def as_int(f: float) -> int:
-    return int(round(f))
-
-
-def timestamp_ms() -> int:
-    return as_int(time.time() * 1000)
-
-
-def ms_to_datetime(unix_ms: int) -> datetime:
-    tz_ = tz.gettz(TIME_ZONE)
-    return datetime.datetime.fromtimestamp(unix_ms / 1000, tz=tz_)
-
-
-def to_str_datetime() -> str:
-    return datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S%f')
-
-
-def _alchemy_encoder(obj):
-    if isinstance(obj, datetime.date):
-        return obj.strftime("%Y-%m-%d %H:%M:%S")
-    elif isinstance(obj, decimal.Decimal):
-        return float(obj)
-    elif isinstance(obj, ObjectId):
-        return str(obj)
-
-
-def serialize_obj(obj):
-    if isinstance(obj, list):
-        return json.dumps([dict(r) for r in obj], ensure_ascii=False, default=_alchemy_encoder)
-    else:
-        return json.dumps(dict(obj), ensure_ascii=False, default=_alchemy_encoder)
-
-
-def write_image_(page, pg: int, trans, target_file: str):
-    pix = page.get_pixmap(matrix=trans, alpha=False)  # alpha=False 白色背景  不透明
-    pix.save(f'{target_file}/image_{pg}.jpg')
-
-
 def sort_key(s) -> int:
     try:
         c = re.findall('\d+', s)[0]
     except:
         c = -1
     return int(c)
+
+
+def md_extensions_():
+    # return [
+    #     'toc',  # 目录，[toc]
+    #     'extra',  # 缩写词、属性列表、释义列表、围栏式代码块、脚注、在HTML的Markdown、表格
+    #     'mdx_math',  # KaTeX数学公式，$E=mc^2$和$$E=mc^2$$
+    #     'markdown_checklist.extension',  # checklist，- [ ]和- [x]
+    #     'pymdownx.magiclink',  # 自动转超链接，
+    #     'pymdownx.caret',  # 上标下标，
+    #     'pymdownx.superfences',  # 多种块功能允许嵌套，各种图表
+    #     'pymdownx.betterem',  # 改善强调的处理(粗体和斜体)
+    #     'pymdownx.mark',  # 亮色突出文本
+    #     'pymdownx.highlight',  # 高亮显示代码
+    #     'pymdownx.tasklist',  # 任务列表
+    #     'pymdownx.tilde'  # 删除线
+    # ]
+    return [
+        'markdown.extensions.extra',
+        'markdown.extensions.abbr',
+        'markdown.extensions.attr_list',
+        'markdown.extensions.def_list',
+        'markdown.extensions.fenced_code',
+        'markdown.extensions.footnotes',
+        'markdown.extensions.md_in_html',
+        'markdown.extensions.tables',
+        'markdown.extensions.admonition',
+        'markdown.extensions.codehilite',
+        'markdown.extensions.legacy_attrs',
+        'markdown.extensions.legacy_em',
+        'markdown.extensions.meta',
+        'markdown.extensions.nl2br',
+        'markdown.extensions.sane_lists',
+        'markdown.extensions.smarty',
+        'markdown.extensions.toc',
+        'markdown.extensions.wikilinks',
+
+        'toc',
+        'extra',
+        'mdx_math',
+        'markdown_checklist.extension',
+        'pymdownx.magiclink',
+        'pymdownx.caret',
+        'pymdownx.superfences',
+        'pymdownx.betterem',
+        'pymdownx.mark',
+        'pymdownx.highlight',
+        'pymdownx.tasklist',
+        'pymdownx.tilde'
+    ]
+
+
+def md_extensions_configs_():
+    return {
+        'mdx_math': {
+            'enable_dollar_delimiter': True  # 允许单个$
+        },
+        'pymdownx.superfences': {
+            "custom_fences": [
+                {
+                    'name': 'mermaid',  # 开启流程图等图
+                    'class': 'mermaid',
+                    'format': superfences.fence_div_format
+                }
+            ]
+        },
+        'pymdownx.highlight': {
+            'linenums': True,  # 显示行号
+            'linenums_style': 'pymdownx-inline'  # 代码和行号分开
+        },
+        'pymdownx.tasklist': {
+            'clickable_checkbox': True,  # 任务列表可点击
+        }
+    }
+
+
+def write_image_(page, pg: int, trans, target_file: str):
+    pix = page.get_pixmap(matrix=trans, alpha=False)  # alpha=False 白色背景  不透明
+    pix.save(f'{target_file}/image_{pg}.jpg')
 
 
 def merge_img_(img_list: List, target_file: str = None):
