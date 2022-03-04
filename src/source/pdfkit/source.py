@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import os
 import io
+import os
+
 try:
     # Python 2.x and 3.x support for checking string types
     assert basestring
