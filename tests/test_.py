@@ -14,7 +14,7 @@ def setup_function():
 
 
 def test_html2pdf():
-    H.html2pdf(html_file='./tf_/hello_.html')
+    H.html2pdf(input_file='./tf_/hello_.html',output_file='./tf_/hello_.pdf')
 
 # def test_html2image():
 #     H.html2image()
