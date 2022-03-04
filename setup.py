@@ -48,11 +48,8 @@ setup(
         'click>=6.7',
         'colorama==0.4.4',
         'pandas==1.3.0',
-        'pymongo==3.11.4',
-        'PyMySQL==0.9.3',
         'python-dotenv==0.19.2',
         'python_dateutil==2.8.2',
-        'setuptools==60.0.3',
     ],
 )
 
