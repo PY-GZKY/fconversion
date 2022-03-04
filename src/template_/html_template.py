@@ -13,7 +13,7 @@ html_ = '''
     <script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/mathtex-script-type.min.js" defer></script>
 </head>
-<body for="html-export">
+<body {class_}>
 <div class="mume markdown-preview">            
 <article class="markdown-body">
 {div_}
