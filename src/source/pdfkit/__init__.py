@@ -7,5 +7,5 @@ __author__ = 'Golovanov Stanislav'
 __version__ = '1.0.0'
 __license__ = 'MIT'
 
-from .pdfkit import PDFKit
 from .api import from_url, from_file, from_string, configuration
+from .pdfkit import PDFKit

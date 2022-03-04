@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+import codecs
+import io
 import re
 import subprocess
 import sys
 from collections import OrderedDict
-from .source import Source
+
 from .configuration import Configuration
-import io
-import codecs
+from .source import Source
+
 try:
     # Python 2.x and 3.x support for checking string types
     basestring
