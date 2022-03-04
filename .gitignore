@@ -12,3 +12,4 @@ tf_/
 *.docx
 *.jpg
 *.png
+tests/
