@@ -1,46 +1,57 @@
-import imgkit
-import pdfkit
+import os
 
-from src.constants import WKHTMLTOPDF_PATH, WKHTMLTOIMAGE_PATH
+from src.constants import *
+from src.source import imgkit
+from src.source import pdfkit
 
 
 class HTML:
     def __init__(self,
-                 wkhtmltopdf_path: str = WKHTMLTOPDF_PATH,
-                 wkhtmltoimage_path: str = WKHTMLTOIMAGE_PATH,
+                 wkhtmltopdf_path: str = None,
+                 wkhtmltoimage_path: str = None,
                  encoding='utf-8'
                  ):
         self.encoding = encoding
-        self.wkhtmltopdf_path = wkhtmltopdf_path
-        self.wkhtmltoimage_path = wkhtmltoimage_path
+        self.wkhtmltopdf_path = default_wkhtmltopdf_path if wkhtmltopdf_path is None else wkhtmltopdf_path
+        self.wkhtmltoimage_path = default_wkhtmltoimage_path if wkhtmltoimage_path is None else wkhtmltoimage_path
 
-    def html2pdf(self, input_file: str, output_file: str, url: str = None):
+    def html2pdf(self, input_path: str, output_path: str, url: str = None, enable_local_file: bool = True):
         """
         pip install pdfkit
-        并且依赖于 wkhtmltopdf 环境
-        :return:
         """
-        if self.wkhtmltopdf_path is None:
-            raise ValueError("wkhtmltopdf path cannot be empty")
-        confg = pdfkit.configuration(wkhtmltopdf=self.wkhtmltopdf_path)
+        # if self.wkhtmltopdf_path is None:
+        #     raise ValueError("wkhtmltopdf path cannot be empty")
+
+        conf = pdfkit.configuration(wkhtmltopdf=self.wkhtmltopdf_path)
+        options = {
+            "enable-local-file-access": None
+        } if enable_local_file else default_options_
 
         if url is not None:
-            pdfkit.from_url(url, output_file, configuration=confg)
+            pdfkit.from_url(url, output_path, configuration=conf, options=options)
         else:
-            pdfkit.from_file(input_file, output_file, configuration=confg)
+            pdfkit.from_file(input_path, output_path, configuration=conf, options=options)
 
-    def html2image(self, input_file: str, output_file: str,
-                   url: str = 'https://docs.python.org/zh-cn/3/library/asyncio-queue.html'):
+    def html2image(self, input_path: str, output_path: str,
+                   url: str = None):
         """
-        pip install pdfkit
-        并且依赖于 wkhtmltopdf 环境
-        :return:
+        pip install imgkit
         """
-        if self.wkhtmltoimage_path is None:
-            raise ValueError("wkhtmltoimage path cannot be empty")
         options = {
-            "encoding": self.encoding
+            'encoding': "utf_8_sig",
+            'enable-local-file-access': None
         }
-        cfg = imgkit.config(wkhtmltoimage=self.wkhtmltoimage_path)
-        # imgkit.from_file(input_file, output_file, config=cfg)
-        imgkit.from_url(url, 'ip.jpg', options=options, config=cfg)
+        conf = imgkit.config(wkhtmltoimage=self.wkhtmltoimage_path)
+
+        if url is not None:
+            imgkit.from_url(url, output_path, options=options, config=conf)
+        else:
+            print(static_dir)
+            imgkit.from_file(input_path, output_path, options=options, config=conf)
+            # imgkit.from_string(input_path, output_path, options=options, config=conf)
+
+
+if __name__ == '__main__':
+    H = HTML()
+    # H.html2pdf(input_path='../../tests/tf_/hello_.html', output_path='../../tests/tf_/hello_.pdf')
+    H.html2image(input_path="../../tests/hello_.html", output_path='../../tests/_.jpg')
