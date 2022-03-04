@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import sys
 
 from .pdfkit import Configuration
 from .pdfkit import PDFKit
-from .utils import get_configuration_
+# from .utils import get_configuration_
 
 
 def from_url(url, output_path=None, options=None, toc=None, cover=None,
@@ -22,9 +21,9 @@ def from_url(url, output_path=None, options=None, toc=None, cover=None,
 
     Returns: True on success
     """
-    configuration_ = get_configuration_(configuration)
+    # configuration_ = get_configuration_(configuration)
     r = PDFKit(url, 'url', options=options, toc=toc, cover=cover,
-               configuration=configuration_, cover_first=cover_first, verbose=verbose)
+               configuration=configuration, cover_first=cover_first, verbose=verbose)
 
     return r.to_pdf(output_path)
 
@@ -46,9 +45,9 @@ def from_file(input, output_path=None, options=None, toc=None, cover=None, css=N
 
     Returns: True on success
     """
-    configuration_ = get_configuration_(configuration)
+    # configuration_ = get_configuration_(configuration)
     r = PDFKit(input, 'file', options=options, toc=toc, cover=cover, css=css,
-               configuration=configuration_, cover_first=cover_first, verbose=verbose)
+               configuration=configuration, cover_first=cover_first, verbose=verbose)
 
     return r.to_pdf(output_path)
 
@@ -70,9 +69,9 @@ def from_string(input, output_path=None, options=None, toc=None, cover=None, css
 
     Returns: True on success
     """
-    configuration_ = get_configuration_(configuration)
+    # configuration_ = get_configuration_(configuration)
     r = PDFKit(input, 'string', options=options, toc=toc, cover=cover, css=css,
-               configuration=configuration_, cover_first=cover_first, verbose=verbose)
+               configuration=configuration, cover_first=cover_first, verbose=verbose)
 
     return r.to_pdf(output_path)
 
