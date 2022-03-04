@@ -1,10 +1,11 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
+
 import fitz
 from alive_progress import alive_bar
 
 from src import write_image_, sort_key, merge_img_
-from src.constants import POOL_MAX_WORKERS
+from src.constants import pool_max_workers
 
 
 def pdf2epub():
@@ -44,7 +45,7 @@ def pdf2image(source_file: str, target_file: str = None, zoom_x: int = 4, zoom_y
     trans = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
     title_ = f'正在导出 {source_file} → {target_file}'
     with alive_bar(page_count_, title=title_, bar="blocks") as bar:
-        with ThreadPoolExecutor(max_workers=POOL_MAX_WORKERS) as executor:
+        with ThreadPoolExecutor(max_workers=pool_max_workers) as executor:
             for pg in range(page_count_):
                 executor.submit(write_image_, pdf_doc_[pg], pg, trans, target_file).add_done_callback(
                     lambda func: bar())
