@@ -1,3 +1,4 @@
+import codecs
 import os
 
 import markdown
@@ -14,7 +15,7 @@ from src.constants import *
 from src.source import imgkit
 from src.source import pdfkit
 from src.templates.html_template import html_
-from src.utils import md_extensions_, md_extensions_configs_
+from src.utils.utils import md_extensions_, md_extensions_configs_
 
 
 class MARKDOWN:
@@ -30,14 +31,14 @@ class MARKDOWN:
         self.extensions = md_extensions_()
         self.extension_configs = md_extensions_configs_()
 
-    def markdown2image(self, input_path: str, output_path: str):
+    def markdown2image(self, input_path: str, output_path: str):  # noqa F401
         """
         pip install imgkit
         """
         conf = imgkit.config(wkhtmltoimage=self.wkhtmltoimage_path)
         options = {
-            'format': 'jpg',
-            'encoding': "UTF-8"
+            'encoding': "utf_8_sig",
+            'enable-local-file-access': None
         }
         css = [
             "../../src/static/linenum.css",
@@ -45,12 +46,12 @@ class MARKDOWN:
             "../../src/static/tasklist.css",
             "../../src/static/codehilite.css",
         ]
-        output_path_ = self.markdown2html(input_path, "../../tests/hello_.html", is_save=True)
-        imgkit.from_file(output_path_, output_path, options=options, config=conf, css=css)
+        output_path_ = self.markdown2html(input_path, "../../src/test_files/_.html", is_save=True)
+        imgkit.from_file(output_path_, output_path, options=options, config=conf)
         # imgkit.from_string(output_path_, output_path, options=options, config=conf, css=css)
 
 
-    def markdown2pdf(self, input_path: str, output_path: str,enable_local_file:bool=True):
+    def markdown2pdf(self, input_path: str, output_path: str,enable_local_file:bool=True):  # noqa F401
         """
         """
         conf = pdfkit.configuration(wkhtmltopdf=self.wkhtmltopdf_path)
@@ -70,7 +71,7 @@ class MARKDOWN:
         """
         """
         try:
-            with open(input_path, "r",  encoding="utf-8") as md_:
+            with codecs.open(input_path, "r",  encoding="utf-8") as md_:
                 md_text_ = md_.read()
         except Exception as e:
             print("<Error>", e)
@@ -83,10 +84,11 @@ class MARKDOWN:
                               )
 
         class_ = ' for="html-export"' if is_center else ""
-        html_text_ = self.html_.format(title_=title, div_=html_text_,class_=class_)
+        html_text_ = self.html_.format(title_=title, static_dir=static_dir,div_=html_text_,class_=class_)
+
         if is_save:
             try:
-                with open(output_path, 'w', encoding=self.encoding) as file_html_:
+                with codecs.open(output_path, 'w', encoding=self.encoding, errors="xmlcharrefreplace") as file_html_:
                     file_html_.write(html_text_)
                 return output_path
             except Exception:
@@ -100,5 +102,5 @@ class MARKDOWN:
 
 if __name__ == '__main__':
     M = MARKDOWN()
-    # M.markdown2html(input_path='../../tests/tf_/hello_.md', output_path='../../tests/tf_/hello_.html')
-    M.markdown2image(input_path='../../tests/hello_.md', output_path='../../tests/tf_/_.jpg')
+    M.markdown2html(input_path=f'../../src/test_files/_.md', output_path='../../src/test_files/_.html')
+    # M.markdown2image(input_path=f'../../src/test_files/_.md', output_path=f'../../src/test_files/_.jpg',)
