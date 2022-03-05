@@ -1,2 +1,3 @@
+import pyarrow
 def csv2xlsx(source_file: str, target_file: str = None, ):
     ...
