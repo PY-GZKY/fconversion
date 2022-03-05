@@ -1,8 +1,8 @@
 # SETTING
 import os
 
-default_wkhtmltopdf_path = r'E:\\Py_Word_Code\\fconversion\\src\\bin\\wkhtmltopdf.exe'
-default_wkhtmltoimage_path = r'E:\\Py_Word_Code\\fconversion\\src\\bin\\wkhtmltoimage.exe'
+default_wkhtmltopdf_path = r'src/bin/wkhtmltopdf.exe'
+default_wkhtmltoimage_path = r'src/bin/wkhtmltoimage.exe'
 # default_wkhtmltopdf_path = r'D:/wkhtmltopdf/bin/wkhtmltopdf.exe'
 # default_wkhtmltoimage_path = r'D:/wkhtmltopdf/bin/wkhtmltoimage.exe'
 encoding_ = 'utf_8_sig'
