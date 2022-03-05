@@ -13,4 +13,4 @@ default_options_ = {
 }
 base_dir = os.path.dirname(os.path.abspath(__file__)).replace("\\","/")
 static_dir = os.path.join(base_dir, 'static').replace("\\","/")
-# print(static_dir)
+print(static_dir)
