@@ -32,8 +32,7 @@ class HTML:
         else:
             pdfkit.from_file(input_path, output_path, configuration=conf, options=options)
 
-    def html2image(self, input_path: str, output_path: str,
-                   url: str = None):
+    def html2image(self, input_path: str, output_path: str, url: str = None):
         """
         pip install imgkit
         """
@@ -46,12 +45,10 @@ class HTML:
         if url is not None:
             imgkit.from_url(url, output_path, options=options, config=conf)
         else:
-            print(static_dir)
             imgkit.from_file(input_path, output_path, options=options, config=conf)
-            # imgkit.from_string(input_path, output_path, options=options, config=conf)
 
 
 if __name__ == '__main__':
     H = HTML()
-    # H.html2pdf(input_path='../../tests/tf_/hello_.html', output_path='../../tests/tf_/hello_.pdf')
-    H.html2image(input_path="../../tests/hello_.html", output_path='../../tests/_.jpg')
+    H.html2pdf(input_path=f'../../src/test_files/_.html', output_path=f'../../src/test_files/_.pdf')
+    H.html2image(input_path=f'../../src/test_files/_.html', output_path=f'../../src/test_files/_.jpg')
