@@ -10,5 +10,5 @@ def audio2audio(source_file: str, target_file: str):
     # song.export("Python.mp3", format="mp3")
 
 
-def audio2text(self):
+def audio2text():
     ...
