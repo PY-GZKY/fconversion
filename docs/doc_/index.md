@@ -12,6 +12,13 @@
 
 - `PyArrow >= 7.0.0`
 
+> 警告:
+> 
+>`Pyarrow` 目前在 `windows` 平台上只支持到 `win64` (`Python 64bit`)
+> 
+> RuntimeError: Not supported on 32-bit Windows
+
+
 ## 安装
 
 ```shell
@@ -20,11 +27,7 @@ pip install fconversion
 
 ## 基本用法
 
-
 ### _markdown_
-- 目前不支持数学公式
-- 目前不支持流程图
-
 ### _pdf_
 ### _word_
 ### _html_
