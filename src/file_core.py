@@ -1,14 +1,10 @@
 # -*- coding:utf-8 -*-
 from colorama import init as colorama_init_
-from dotenv import load_dotenv
-
-load_dotenv(verbose=True)
 colorama_init_(autoreset=True)
 
 
 class FileEngine:
     """
-    这里写什么
     """
 
 
