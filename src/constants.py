@@ -14,3 +14,5 @@ default_wkhtmltoimage_path = f'{base_dir}/bin/wkhtmltoimage.exe'
 
 # default_wkhtmltopdf_path = r'D:/wkhtmltopdf/bin/wkhtmltopdf.exe'
 # default_wkhtmltoimage_path = r'D:/wkhtmltopdf/bin/wkhtmltoimage.exe'
+
+echo_info = '{}{} → {} exported successfully'
