@@ -42,7 +42,7 @@ def xlsx2csv(input_path: str, sheet_name: str = None, output_path: str = None, q
     df = pa.Table.from_pylist(doc_list_,schema=df_schema)
     """
 
-    pa_df_ = pa.Table.from_pandas(df=pd_df_)
+    pa_df_ = pa.Table.from_pandas(df=pd_df_, preserve_index=False)
     df_schema = pa.Schema.from_pandas(df=pd_df_)
     with pa_csv_.CSVWriter(output_path, df_schema) as writer:
         writer.write_table(pa_df_)
@@ -56,5 +56,5 @@ if __name__ == '__main__':
     xlsx2csv(input_path='../../src/test_files/318线路列表.xlsx',
              sheet_name='318线路列表',
              output_path='../../src/test_files/318线路列表.csv',
-             query_str_='线路景点所在城市 == "四川" & 途经此景点价格 == "150元"'
+             # query_str_='线路景点所在城市 == "四川" & 途经此景点价格 == "150元"'
              )
