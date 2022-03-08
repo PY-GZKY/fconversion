@@ -1,20 +1,20 @@
 import pyarrow as pa
 
 
-def type_convert(pydict: dict):
+def type_convert(py_):
     _ = None
     schemas_ = []
-    for k, v in pydict.items():
+    for v in py_:
         if isinstance(v, str):
-            _ = (k, pa.string())
+            _ = (v, pa.string())
         elif isinstance(v, int):
-            _ = (k, pa.int64())
+            _ = (v, pa.int64())
         elif isinstance(v, float):
-            _ = (k, pa.float64())
+            _ = (v, pa.float64())
         elif isinstance(v, list):
             ty = pa.map_(pa.string(), pa.int64(), pa.float64())
-            _ = (k, pa.array(v, type=ty))
+            _ = (v, pa.array(v, type=ty))
         else:
-            _ = (k, pa.string())
+            _ = (v, pa.string())
         schemas_.append(_)
     return pa.schema(schemas_)
