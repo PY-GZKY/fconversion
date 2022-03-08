@@ -1,5 +1,4 @@
 import os
-
 from src.constants import *
 from src.source import imgkit
 from src.source import pdfkit
