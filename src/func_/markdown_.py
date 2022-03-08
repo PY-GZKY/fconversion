@@ -1,8 +1,6 @@
 import codecs
 import os
 
-import markdown
-
 try:
     from markdown import markdown
 except ModuleNotFoundError as e:
@@ -31,47 +29,11 @@ class MARKDOWN:
         self.extensions = md_extensions_()
         self.extension_configs = md_extensions_configs_()
 
-    def markdown2image(self, input_path: str, output_path: str):  # noqa F401
-        """
-        pip install imgkit
-        """
-        conf = imgkit.config(wkhtmltoimage=self.wkhtmltoimage_path)
-        options = {
-            'encoding': "utf_8_sig",
-            'enable-local-file-access': None
-        }
-        css = [
-            "../../src/static/linenum.css",
-            "../../src/static/markdown.css",
-            "../../src/static/tasklist.css",
-            "../../src/static/codehilite.css",
-        ]
-        output_path_ = self.markdown2html(input_path, "../../src/test_files/_.html", is_save=True)
-        imgkit.from_file(output_path_, output_path, options=options, config=conf)
-        # imgkit.from_string(output_path_, output_path, options=options, config=conf, css=css)
-
-
-    def markdown2pdf(self, input_path: str, output_path: str,enable_local_file:bool=True):  # noqa F401
-        """
-        """
-        conf = pdfkit.configuration(wkhtmltopdf=self.wkhtmltopdf_path)
-        options = {
-            "enable-local-file-access": None
-        } if enable_local_file else default_options_
-
-        """
-        html_text_ = self.markdown2html(input_path, "./tf_/hello_.html",is_center=False,is_save=False)
-        pdfkit.from_string(html_text_, output_path, options=options, configuration=conf)
-        """
-
-        output_path_ = self.markdown2html(input_path, "./tf_/hello_.html",is_center=False,is_save=True)
-        pdfkit.from_file(output_path_, output_path, options=options, configuration=conf)
-
-    def markdown2html(self, input_path: str, output_path: str, is_center:bool=True, is_save:bool=True):
+    def markdown2html(self, input_path: str, output_path: str, is_center: bool = True, is_save: bool = True):
         """
         """
         try:
-            with codecs.open(input_path, "r",  encoding="utf-8") as md_:
+            with codecs.open(input_path, "r", encoding="utf-8") as md_:
                 md_text_ = md_.read()
         except Exception as e:
             print("<Error>", e)
@@ -84,7 +46,7 @@ class MARKDOWN:
                               )
 
         class_ = ' for="html-export"' if is_center else ""
-        html_text_ = self.html_.format(title_=title, static_dir=static_dir,div_=html_text_,class_=class_)
+        html_text_ = self.html_.format(title_=title, static_dir=static_dir, div_=html_text_, class_=class_)
 
         if is_save:
             try:
@@ -97,10 +59,7 @@ class MARKDOWN:
             return html_text_
 
 
-
-
-
 if __name__ == '__main__':
     M = MARKDOWN()
     M.markdown2html(input_path=f'../../src/test_files/_.md', output_path='../../src/test_files/_.html')
-    # M.markdown2image(input_path=f'../../src/test_files/_.md', output_path=f'../../src/test_files/_.jpg',)
+
