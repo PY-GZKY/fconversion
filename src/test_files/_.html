@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../../src/static/tasklist.css">
     <link rel="stylesheet" href="../../src/static/codehilite.css">
     <link rel="stylesheet" href="../../src/static/progress.css">
-    <script src="https://unpkg.com/mermaid@8.7.0/dist/mermaid.min.js"></script>
+<!--    <script src="https://unpkg.com/mermaid@8.7.0/dist/mermaid.min.js"></script>-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/mathtex-script-type.min.js" defer></script>
@@ -18,17 +18,6 @@
 <body for="html-export">
 <div class="mume markdown-preview">            
 <article class="markdown-body">
-<h3 id="_1">主要特性</h3>
-<ul>
-<li>支持“标准”Markdown / CommonMark和Github风格的语法，也可变身为代码编辑器；</li>
-<li>支持实时预览、图片（跨域）上传、预格式文本/代码/表格插入、代码折叠、搜索替换、只读模式、自定义样式主题和多语言语法高亮等功能；</li>
-<li>支持ToC（Table of Contents）、Emoji表情、Task lists、@链接等Markdown扩展语法；</li>
-<li>支持TeX科学公式（基于KaTeX）、流程图 Flowchart 和 时序图 Sequence Diagram;</li>
-<li>支持识别和解析HTML标签，并且支持自定义过滤标签解析，具有可靠的安全性和几乎无限的扩展性；</li>
-<li>支持 AMD / CMD 模块化加载（支持 Require.js &amp; Sea.js），并且支持自定义扩展插件；</li>
-<li>兼容主流的浏览器（IE8+）和Zepto.js，且支持iPad等平板设备；</li>
-<li>支持自定义主题样式；</li>
-</ul>
 <h1 id="editormd">Editor.md</h1>
 <p><img alt="" src="https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png"></p>
 <p><img alt="" src="https://img.shields.io/github/stars/pandao/editor.md.svg"> <img alt="" src="https://img.shields.io/github/forks/pandao/editor.md.svg"> <img alt="" src="https://img.shields.io/github/tag/pandao/editor.md.svg"> <img alt="" src="https://img.shields.io/github/release/pandao/editor.md.svg"> <img alt="" src="https://img.shields.io/github/issues/pandao/editor.md.svg"> <img alt="" src="https://img.shields.io/bower/v/editor.md.svg"></p>
@@ -36,7 +25,6 @@
 <p>[TOCM]</p>
 <div class="toc">
 <ul>
-<li><a href="#_1">主要特性</a></li>
 <li><a href="#editormd">Editor.md</a></li>
 <li><a href="#heading-1">Heading 1</a><ul>
 <li><a href="#heading-2">Heading 2</a><ul>
@@ -73,17 +61,16 @@
 </li>
 <li><a href="#this-is-an-h1">This is an H1</a><ul>
 <li><a href="#this-is-an-h2">This is an H2</a><ul>
-<li><a href="#_2">字符效果和横线等</a></li>
+<li><a href="#_1">字符效果和横线等</a></li>
 <li><a href="#blockquotes">引用 Blockquotes</a></li>
 <li><a href="#links">锚点与链接 Links</a></li>
 <li><a href="#codes">多语言代码高亮 Codes</a><ul>
 <li><a href="#inline-code">行内代码 Inline code</a></li>
-<li><a href="#_3">缩进风格</a></li>
+<li><a href="#_2">缩进风格</a></li>
 <li><a href="#js">JS代码</a></li>
 <li><a href="#html-html-codes">HTML代码 HTML codes</a></li>
 </ul>
 </li>
-<li><a href="#images">图片 Images</a></li>
 <li><a href="#lists">列表 Lists</a><ul>
 <li><a href="#unordered-lists-">无序列表（减号）Unordered Lists (-)</a></li>
 <li><a href="#unordered-lists">无序列表（星号）Unordered Lists (*)</a></li>
@@ -102,7 +89,7 @@
 </ul>
 </li>
 <li><a href="#texkatex">科学公式 TeX(KaTeX)</a></li>
-<li><a href="#_4">进度条</a></li>
+<li><a href="#_3">进度条</a></li>
 <li><a href="#flowchart">绘制流程图 Flowchart</a></li>
 <li><a href="#sequence-diagram">绘制序列图 Sequence Diagram</a></li>
 <li><a href="#end">End</a></li>
@@ -127,7 +114,7 @@
 <h4 id="heading-underline">标题（用底线的形式）Heading (underline)</h4>
 <h1 id="this-is-an-h1">This is an H1</h1>
 <h2 id="this-is-an-h2">This is an H2</h2>
-<h3 id="_2">字符效果和横线等</h3>
+<h3 id="_1">字符效果和横线等</h3>
 <hr>
 <p><del>删除线</del> <s>删除线（开启识别HTML标签时）</s>
 <em>斜体字</em>      <em>斜体字</em>
@@ -159,87 +146,66 @@
 <h3 id="codes">多语言代码高亮 Codes</h3>
 <h4 id="inline-code">行内代码 Inline code</h4>
 <p>执行命令：<code>npm install marked</code></p>
-<h4 id="_3">缩进风格</h4>
+<h4 id="_2">缩进风格</h4>
 <p>即缩进四个空格，也做为实现类似<code>&lt;pre&gt;</code>预格式化文本(Preformatted Text)的功能。</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;?php
-<span class="linenos" data-linenos="2 "></span>    echo &quot;Hello world!&quot;;
-<span class="linenos" data-linenos="3 "></span>?&gt;
-</code></pre></div>
-
+<pre class="highlight"><code>&lt;?php
+    echo "Hello world!";
+?&gt;
+</code></pre>
 <p>预格式化文本：</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>| First Header  | Second Header |
-<span class="linenos" data-linenos="2 "></span>| ------------- | ------------- |
-<span class="linenos" data-linenos="3 "></span>| Content Cell  | Content Cell  |
-<span class="linenos" data-linenos="4 "></span>| Content Cell  | Content Cell  |
-</code></pre></div>
-
+<pre class="highlight"><code>| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+</code></pre>
 <h4 id="js">JS代码</h4>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kd">function</span> <span class="nx">test</span><span class="p">(){</span>
-<span class="linenos" data-linenos=" 2 "></span>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">);</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="p">}</span>
-<span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="kd">var</span> <span class="nx">box</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
-<span class="linenos" data-linenos=" 7 "></span>        <span class="k">return</span> <span class="nx">box</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
-<span class="linenos" data-linenos=" 8 "></span>    <span class="p">};</span>
-<span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span>    <span class="nx">box</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">box</span><span class="p">.</span><span class="nx">fn</span> <span class="o">=</span> <span class="p">{</span>
-<span class="linenos" data-linenos="11 "></span>        <span class="nx">init</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
-<span class="linenos" data-linenos="12 "></span>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;box.init()&#39;</span><span class="p">);</span>
-<span class="linenos" data-linenos="13 "></span>
-<span class="linenos" data-linenos="14 "></span>            <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="linenos" data-linenos="15 "></span>        <span class="p">},</span>
-<span class="linenos" data-linenos="16 "></span>
-<span class="linenos" data-linenos="17 "></span>        <span class="nx">add</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">){</span>
-<span class="linenos" data-linenos="18 "></span>            <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="nx">str</span><span class="p">);</span>
-<span class="linenos" data-linenos="19 "></span>
-<span class="linenos" data-linenos="20 "></span>            <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="linenos" data-linenos="21 "></span>        <span class="p">},</span>
-<span class="linenos" data-linenos="22 "></span>
-<span class="linenos" data-linenos="23 "></span>        <span class="nx">remove</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">){</span>
-<span class="linenos" data-linenos="24 "></span>            <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;remove&quot;</span><span class="p">,</span> <span class="nx">str</span><span class="p">);</span>
-<span class="linenos" data-linenos="25 "></span>
-<span class="linenos" data-linenos="26 "></span>            <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="linenos" data-linenos="27 "></span>        <span class="p">}</span>
-<span class="linenos" data-linenos="28 "></span>    <span class="p">};</span>
-<span class="linenos" data-linenos="29 "></span>
-<span class="linenos" data-linenos="30 "></span>    <span class="nx">box</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">init</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">box</span><span class="p">.</span><span class="nx">fn</span><span class="p">;</span>
-<span class="linenos" data-linenos="31 "></span>
-<span class="linenos" data-linenos="32 "></span>    <span class="nb">window</span><span class="p">.</span><span class="nx">box</span> <span class="o">=</span><span class="nx">box</span><span class="p">;</span>
-<span class="linenos" data-linenos="33 "></span><span class="p">})();</span>
-<span class="linenos" data-linenos="34 "></span>
-<span class="linenos" data-linenos="35 "></span><span class="kd">var</span> <span class="nx">testBox</span> <span class="o">=</span> <span class="nx">box</span><span class="p">();</span>
-<span class="linenos" data-linenos="36 "></span><span class="nx">testBox</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;jQuery&quot;</span><span class="p">).</span><span class="nx">remove</span><span class="p">(</span><span class="s2">&quot;jQuery&quot;</span><span class="p">);</span>
-</code></pre></div>
+<pre class="highlight"><code class="language-javascript">function test(){
+    console.log("Hello world!");
+}
 
+(function(){
+    var box = function(){
+        return box.fn.init();
+    };
+
+    box.prototype = box.fn = {
+        init : function(){
+            console.log('box.init()');
+
+            return this;
+        },
+
+        add : function(str){
+            alert("add", str);
+
+            return this;
+        },
+
+        remove : function(str){
+            alert("remove", str);
+
+            return this;
+        }
+    };
+
+    box.fn.init.prototype = box.fn;
+
+    window.box =box;
+})();
+
+var testBox = box();
+testBox.add("jQuery").remove("jQuery");</code></pre>
 <h4 id="html-html-codes">HTML代码 HTML codes</h4>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 3 "></span>    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 4 "></span>        <span class="p">&lt;</span><span class="nt">mate</span> <span class="na">charest</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span> <span class="p">/&gt;</span>
-<span class="linenos" data-linenos=" 5 "></span>        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Hello world!<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 7 "></span>    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 8 "></span>        <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello world!<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 9 "></span>    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="10 "></span><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</code></pre></div>
-
-<h3 id="images">图片 Images</h3>
-<p>Image:</p>
-<p><img alt="" src="https://pandao.github.io/editor.md/examples/images/4.jpg"></p>
-<blockquote>
-<p>Follow your heart.</p>
-</blockquote>
-<p><img alt="" src="https://pandao.github.io/editor.md/examples/images/8.jpg"></p>
-<blockquote>
-<p>图为：厦门白城沙滩</p>
-</blockquote>
-<p>图片加链接 (Image + Link)：</p>
-<p><a href="https://pandao.github.io/editor.md/examples/images/7.jpg" title="李健首张专辑《似水流年》封面"><img alt="" src="https://pandao.github.io/editor.md/examples/images/7.jpg"></a></p>
-<blockquote>
-<p>图为：李健首张专辑《似水流年》封面</p>
-</blockquote>
+<pre class="highlight"><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;mate charest="utf-8" /&gt;
+        &lt;title&gt;Hello world!&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Hello world!&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
 <hr>
 <h3 id="lists">列表 Lists</h3>
 <h4 id="unordered-lists-">无序列表（减号）Unordered Lists (-)</h4>
@@ -473,7 +439,7 @@ E(\mathbf{v}, \mathbf{h}) = -\sum_{i,j}w_{ij}v_i h_j - \sum_i b_i v_i - \sum_j c
     p(h_j=1|\mathbf{v}) & = \sigma\left(\sum_i w_{ij}v_i + c_j\right)
 \end{align}</script>
 </p>
-<h3 id="_4">进度条</h3>
+<h3 id="_3">进度条</h3>
 <p>
 <div class="progress progress-80plus candystripe">
 <div class="progress-bar" style="width:85.00%">
@@ -524,23 +490,19 @@ E(\mathbf{v}, \mathbf{h}) = -\sum_{i,j}w_{ij}v_i h_j - \sum_i b_i v_i - \sum_j c
 </div>
 </p>
 <h3 id="flowchart">绘制流程图 Flowchart</h3>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>st=&gt;start: 用户登陆
-<span class="linenos" data-linenos="2 "></span>op=&gt;operation: 登陆操作
-<span class="linenos" data-linenos="3 "></span>cond=&gt;condition: 登陆成功 Yes or No?
-<span class="linenos" data-linenos="4 "></span>e=&gt;end: 进入后台
-<span class="linenos" data-linenos="5 "></span>
-<span class="linenos" data-linenos="6 "></span>st-&gt;op-&gt;cond
-<span class="linenos" data-linenos="7 "></span>cond(yes)-&gt;e
-<span class="linenos" data-linenos="8 "></span>cond(no)-&gt;op
-</code></pre></div>
+<pre class="highlight"><code class="language-flow">st=&gt;start: 用户登陆
+op=&gt;operation: 登陆操作
+cond=&gt;condition: 登陆成功 Yes or No?
+e=&gt;end: 进入后台
 
+st-&gt;op-&gt;cond
+cond(yes)-&gt;e
+cond(no)-&gt;op</code></pre>
 <h3 id="sequence-diagram">绘制序列图 Sequence Diagram</h3>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Andrew-&gt;China: Says Hello 
-<span class="linenos" data-linenos="2 "></span>Note right of China: China thinks\nabout it 
-<span class="linenos" data-linenos="3 "></span>China--&gt;Andrew: How are you? 
-<span class="linenos" data-linenos="4 "></span>Andrew-&gt;&gt;China: I am good thanks!
-</code></pre></div>
-
+<pre class="highlight"><code class="language-seq">Andrew-&gt;China: Says Hello 
+Note right of China: China thinks\nabout it 
+China--&gt;Andrew: How are you? 
+Andrew-&gt;&gt;China: I am good thanks!</code></pre>
 <h3 id="end">End</h3>
 </article>
 </div>
